@@ -1,7 +1,7 @@
 <div align="center" markdown>
 <img src="https://github.com/supervisely-ecosystem/dev-smart-tool-batched/releases/download/v0.0.1/batch_smart_tool_demo.gif?raw=true" style="width: 100%;"/>
 
-# Batched Smart Tool
+# Videos Batched Smart Tool 
 
 <p align="center">
   <a href="#Overview">Overview</a> •
