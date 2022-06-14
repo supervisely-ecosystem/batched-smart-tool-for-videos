@@ -1,17 +1,15 @@
 <el-dialog title="Apply Model To" :visible.sync="state.selectClassVisible" size="mini"
 style="z-index: 999999">
 
-    <el-radio-group v-model="state.queueMode" size="small" style="margin-bottom: 14px">
-        <el-radio-button label="objects" :disabled="data.objectsLeftTotal == 0"></el-radio-button>
-        <el-radio-button label="images"></el-radio-button>
-    </el-radio-group>
+{#    <el-radio-group v-model="state.queueMode" size="small" style="margin-bottom: 14px">#}
+{#        <el-radio-button label="objects" :disabled="data.objectsLeftTotal == 0"></el-radio-button>#}
+{#        <el-radio-button label="images"></el-radio-button>#}
+{#    </el-radio-group>#}
 
     <div v-if="state.queueMode === 'objects'">
         {{{ classes_table.to_html() }}}
     </div>
-    <div v-else>
-        {{{ images_table.to_html() }}}
-    </div>
+
     <div style="width: 100%; display: flex; align-items: center; justify-content: flex-end">
         <el-button
                 :loading="state.updatingClass"

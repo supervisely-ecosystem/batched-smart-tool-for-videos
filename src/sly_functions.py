@@ -129,5 +129,5 @@ def update_queues_stats(state):
     DataJson()['objectsLeftTotal'] = objects_left_number()
     DataJson()['objectsLeftQueue'] = len(g.selected_queue.queue)
 
-    # select_class.update_classes_table()  # @TODO: update table by objects ids
+    select_class.update_classes_table()  # @TODO: update table by objects ids
 

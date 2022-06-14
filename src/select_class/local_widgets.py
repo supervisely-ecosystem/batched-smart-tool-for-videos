@@ -10,7 +10,7 @@ def progress_bar_formatter(value):
 
 
 classes_table = widgets.RadioTable(
-    columns=["classname", "left", "total", "progress"],
+    columns=["classname", "objects left", "figures left", "figures total", "progress"],
     rows=[],
     subtitles={},  # {"name": "subname"},
     column_formatters={
@@ -18,14 +18,6 @@ classes_table = widgets.RadioTable(
     },
 )
 
-images_table = widgets.RadioTable(
-    columns=["classname", "left", "total", "progress"],
-    rows=[],
-    subtitles={},
-    column_formatters={
-        'progress': progress_bar_formatter
-    },
-)
 
 selected_class_progress = widgets.SlyTqdm()
 running_classes_progress = None

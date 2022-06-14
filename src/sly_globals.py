@@ -59,7 +59,9 @@ prediction_mode = 'batched'
 crops_data = None
 bboxes_order = 'sizes'
 selected_queue = None
+
 classes2queues = {}
+
 images_queue = queue.Queue(maxsize=int(1e6))
 
 grid_controller = GridController(SmartTool)

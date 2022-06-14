@@ -237,7 +237,7 @@ def remove_processed_geometries(state):
     for label, queue in g.classes2queues.items():
         updated_queue = Queue(maxsize=int(1e6))
         for item in queue.queue:
-            if item['slyId'] not in processed_geometries_ids:
+            if item['figureId'] not in processed_geometries_ids:
                 updated_queue.put(item)
 
         g.classes2queues[label] = updated_queue
