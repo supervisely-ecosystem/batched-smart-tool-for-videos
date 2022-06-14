@@ -58,8 +58,8 @@ images_queue = queue.Queue(maxsize=int(1e6))
 grid_controller = GridController(SmartTool)
 
 imagehash2imageinfo_by_datasets = {}
-imagehash2imageann = {}
-labelid2labelann = {}
+# imagehash2imageann = {}
+video_figure_id_to_video_figure = {}
 
 processed_geometries = []
 

@@ -8,6 +8,7 @@ from loguru import logger
 from supervisely.app.fastapi import run_sync
 
 import supervisely
+from supervisely.video_annotation.key_id_map import KeyIdMap
 
 import src.sly_globals as g
 from supervisely.app import DataJson
@@ -18,44 +19,56 @@ import src.sly_functions as global_functions
 import src.dialog_window as dialog_window
 
 
-def get_bboxes_from_annotation(image_annotations):
+def get_bboxes_from_annotation(video_annotation):
     bboxes = []
-    for label in image_annotations.labels:
-        if label.geometry.geometry_name() == 'rectangle':
-            bbox = label.geometry.to_bbox()
+
+    video_figure: supervisely.VideoFigure
+    for video_figure in video_annotation.figures:
+        if video_figure.geometry.geometry_name() == 'rectangle':
+            bbox = video_figure.geometry.to_bbox()
             bboxes.append({
-                'label': label.obj_class.name,
+                'label': video_figure.video_object.obj_class.name,
                 'bbox': bbox,
-                'sly_id': label.geometry.sly_id
+                'figure_id': 0,  # @TODO: change to real figure id
+                'object_id': 0  # @TODO: change to real object id
             })
+
+            g.video_figure_id_to_video_figure[0] = video_figure  # @TODO: change to real figure id
 
     return bboxes
 
 
-def get_data_to_render(image_info, bboxes, current_dataset):
+def get_data_to_render(video_info, bboxes, current_dataset):
     data_to_render = []
 
     for bbox_item in bboxes:
         label = bbox_item['label']
-        sly_id = bbox_item.get('sly_id')
+
+        figure_id = bbox_item['figure_id']
+        object_id = bbox_item['object_id']
+
         bbox = bbox_item['bbox']
 
         data_to_render.append({
+            'figure_id': figure_id,
+            'object_id': object_id,
+
             'label': label,
-            'imageLink': f'{g.api.image.url(team_id=DataJson()["teamId"], workspace_id=DataJson()["workspaceId"], project_id=current_dataset.project_id, dataset_id=current_dataset.id, image_id=image_info.id)}',
-            'imageUrl': f'{image_info.full_storage_url}',
-            'imageName': f'{image_info.name}',
-            'imageHash': f'{image_info.hash}',
-            'imageSize': [image_info.width, image_info.height],
+
+            'videoName': f'{video_info.name}',
+            'videoHash': f'{video_info.hash}',
+            'videoSize': [video_info.frame_width, video_info.frame_height],
+
             'datasetName': f'{current_dataset.name}',
             'datasetId': f'{current_dataset.id}',
+
             'originalBbox': [[bbox.left, bbox.top], [bbox.right, bbox.bottom]],
             'scaledBbox': [[bbox.left, bbox.top], [bbox.right, bbox.bottom]],
+
             'positivePoints': [],
             'negativePoints': [],
             'mask': None,
             'isActive': True,
-            'slyId': sly_id,
 
             'boxArea': (bbox.right - bbox.left) * (bbox.bottom - bbox.top)
         })
@@ -71,16 +84,17 @@ def put_data_to_queues(data_to_render):
             g.images_queue.put(item)
 
 
-def get_annotations_for_dataset(dataset_id, images):
-    images_ids = [image_info.id for image_info in images]
-    return g.api.annotation.download_batch(dataset_id=dataset_id, image_ids=images_ids)
+def get_annotations_for_dataset(dataset_id, videos):
+    videos_ids = [video_info.id for video_info in videos]
+    return g.api.video.annotation.download_bulk(dataset_id=dataset_id, entity_ids=videos_ids)
 
 
-def get_crops_for_queue(selected_image, img_annotation_json, current_dataset, project_meta):
-    image_annotation = supervisely.Annotation.from_json(img_annotation_json.annotation, project_meta)
+def get_crops_for_queue(video_info, video_annotation_json, current_dataset, project_meta):
+    key_id_map = KeyIdMap()
+    video_annotation = supervisely.VideoAnnotation.from_json(video_annotation_json, project_meta, key_id_map)
 
-    bboxes = get_bboxes_from_annotation(image_annotation)
-    data_to_render = get_data_to_render(selected_image, bboxes, current_dataset)
+    bboxes = get_bboxes_from_annotation(video_annotation)
+    data_to_render = get_data_to_render(video_info, bboxes, current_dataset)
     return data_to_render
 
 
@@ -99,7 +113,7 @@ def create_new_object_meta_by_name(output_class_name, geometry_type):
         [supervisely.ObjClass(name=output_class_name, geometry_type=geometry_type,
                               color=list(np.random.choice(range(256), size=3)))])
 
-    return supervisely.ProjectMeta(obj_classes=objects, project_type=supervisely.ProjectType.IMAGES)
+    return supervisely.ProjectMeta(obj_classes=objects, project_type=supervisely.ProjectType.VIDEOS)
 
 
 def get_object_class_by_name(state, output_class_name, geometry_type=supervisely.Bitmap):
@@ -132,29 +146,6 @@ def cache_existing_images(state):
     return state
 
 
-def get_images_for_queue(selected_image, current_dataset):
-    bbox = {
-        'bbox': supervisely.Rectangle(top=0, left=0, bottom=selected_image.height - 1, right=selected_image.width - 1),
-        'label': 'image'
-    }
-
-    data_to_render = get_data_to_render(image_info=selected_image,
-                                        bboxes=[bbox],
-                                        current_dataset=current_dataset)
-
-    return data_to_render
-
-
-def update_additional_data(current_image, current_annotation):
-    image_annotation = supervisely.Annotation.from_json(data=current_annotation.annotation,
-                                                        project_meta=g.input_project_meta)
-
-    for label in image_annotation.labels:
-        if label.geometry.geometry_name() == 'rectangle':
-            g.labelid2labelann[label.geometry.sly_id] = label
-
-    g.imagehash2imageann[current_image.hash] = image_annotation
-
 
 def refill_queues_by_input_project_data(project_id):
     project_meta = supervisely.ProjectMeta.from_json(g.api.project.get_meta(id=project_id))
@@ -165,22 +156,17 @@ def refill_queues_by_input_project_data(project_id):
     crops_data = []
 
     for current_dataset in dialog_window.datasets_progress(project_datasets, message='downloading datasets'):
-        images_in_dataset = g.api.image.get_list(dataset_id=current_dataset.id)
+        videos_in_dataset = g.api.video.get_list(dataset_id=current_dataset.id)
         annotations_in_dataset = get_annotations_for_dataset(dataset_id=current_dataset.id,
-                                                             images=images_in_dataset)
+                                                             videos=videos_in_dataset)
 
-        for current_image, current_annotation in dialog_window.images_progress(
-                zip(images_in_dataset, annotations_in_dataset), total=len(images_in_dataset),
-                message='downloading images'):
-            crops_data.extend(get_crops_for_queue(selected_image=current_image,
-                                                  img_annotation_json=current_annotation,
+        for current_video_info, current_annotation in dialog_window.images_progress(
+                zip(videos_in_dataset, annotations_in_dataset), total=len(videos_in_dataset),
+                message='downloading videos annotations'):
+            crops_data.extend(get_crops_for_queue(video_info=current_video_info,
+                                                  video_annotation_json=current_annotation,
                                                   current_dataset=current_dataset,
                                                   project_meta=project_meta))
-
-            crops_data.extend(get_images_for_queue(selected_image=current_image,
-                                                   current_dataset=current_dataset))
-
-            update_additional_data(current_image, current_annotation)
 
     g.crops_data = crops_data
 
