@@ -13,18 +13,25 @@ from starlette.staticfiles import StaticFiles
 import supervisely
 
 from smart_tool import SmartTool
+from supervisely import KeyIdMap
 from supervisely.app import DataJson, StateJson
 from supervisely.app.fastapi import create, Jinja2Templates
 
 
 from src.grid_controller import GridController
 
-app_root_directory = str(Path(__file__).parent.absolute().parents[0])
+
+src_dir_path = Path(__file__).parent.absolute()
+
+app_root_directory = str(src_dir_path.parents[0])
 logger.info(f"App root directory: {app_root_directory}")
 # sys.path.append(app_root_directory)
 # local_project_dir = os.path.join(app_root_directory, 'local_project')
 logger.info(f'PYTHONPATH={os.environ.get("PYTHONPATH", "")}')
 
+static_files_dir = src_dir_path.parent / 'static'
+temp_frames_dir = static_files_dir / 'temp_frames'
+temp_frames_dir.mkdir(exist_ok=True)
 
 app = FastAPI()
 
@@ -56,6 +63,8 @@ classes2queues = {}
 images_queue = queue.Queue(maxsize=int(1e6))
 
 grid_controller = GridController(SmartTool)
+
+key_id_map = KeyIdMap()
 
 imagehash2imageinfo_by_datasets = {}
 # imagehash2imageann = {}

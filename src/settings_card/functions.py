@@ -14,6 +14,7 @@ import src.sly_globals as g
 from supervisely.app import DataJson
 
 import src.select_class as select_class
+import src.select_class.functions as sc_functions
 
 import src.sly_functions as global_functions
 import src.dialog_window as dialog_window
@@ -26,14 +27,18 @@ def get_bboxes_from_annotation(video_annotation):
     for video_figure in video_annotation.figures:
         if video_figure.geometry.geometry_name() == 'rectangle':
             bbox = video_figure.geometry.to_bbox()
+
+            video_figure_id = g.key_id_map.get_object_id(video_figure.key())
+
             bboxes.append({
                 'label': video_figure.video_object.obj_class.name,
                 'bbox': bbox,
-                'figure_id': 0,  # @TODO: change to real figure id
-                'object_id': 0  # @TODO: change to real object id
+                'figureId': video_figure_id,
+                'objectId': g.key_id_map.get_object_id(video_figure.video_object.key()),
+                'frameIndex': video_figure.frame_index,
             })
 
-            g.video_figure_id_to_video_figure[0] = video_figure  # @TODO: change to real figure id
+            g.video_figure_id_to_video_figure[video_figure_id] = video_figure
 
     return bboxes
 
@@ -44,20 +49,26 @@ def get_data_to_render(video_info, bboxes, current_dataset):
     for bbox_item in bboxes:
         label = bbox_item['label']
 
-        figure_id = bbox_item['figure_id']
-        object_id = bbox_item['object_id']
+        figure_id = bbox_item['figureId']
+        object_id = bbox_item['objectId']
+        frame_index = bbox_item['frameIndex']
 
         bbox = bbox_item['bbox']
 
         data_to_render.append({
-            'figure_id': figure_id,
-            'object_id': object_id,
+            'figureId': figure_id,
+            'objectId': object_id,
+
+            'frameIndex': frame_index,
 
             'label': label,
 
+            'imageUrl': None,
+
             'videoName': f'{video_info.name}',
+            'videoId': f'{video_info.id}',
             'videoHash': f'{video_info.hash}',
-            'videoSize': [video_info.frame_width, video_info.frame_height],
+            'videoSize': tuple([video_info.frame_width, video_info.frame_height]),
 
             'datasetName': f'{current_dataset.name}',
             'datasetId': f'{current_dataset.id}',
@@ -90,8 +101,7 @@ def get_annotations_for_dataset(dataset_id, videos):
 
 
 def get_crops_for_queue(video_info, video_annotation_json, current_dataset, project_meta):
-    key_id_map = KeyIdMap()
-    video_annotation = supervisely.VideoAnnotation.from_json(video_annotation_json, project_meta, key_id_map)
+    video_annotation = supervisely.VideoAnnotation.from_json(video_annotation_json, project_meta, g.key_id_map)
 
     bboxes = get_bboxes_from_annotation(video_annotation)
     data_to_render = get_data_to_render(video_info, bboxes, current_dataset)
@@ -102,6 +112,7 @@ def create_new_project_by_name(state):
     project_name = f'{g.api.project.get_info_by_id(g.input_project_id).name}_BST'
 
     created_project = g.api.project.create(workspace_id=DataJson()['workspaceId'],
+                                           type=supervisely.ProjectType.VIDEOS,
                                            name=project_name,
                                            change_name_if_conflict=True)
 
@@ -146,7 +157,6 @@ def cache_existing_images(state):
     return state
 
 
-
 def refill_queues_by_input_project_data(project_id):
     project_meta = supervisely.ProjectMeta.from_json(g.api.project.get_meta(id=project_id))
     g.input_project_meta = project_meta.clone()
@@ -174,6 +184,30 @@ def refill_queues_by_input_project_data(project_id):
 def select_input_project(identifier: str, state):
     g.grid_controller.clean_all(state=state, data=DataJson())
     refill_queues_by_input_project_data(project_id=identifier)
+
+
+def select_bboxes_order(state):
+    put_data_to_queues(data_to_render=g.crops_data)
+
+    sc_functions.init_table_data()  # fill classes table
+
+    output_project_id = get_output_project_id()
+    if output_project_id is not None:
+        state['dialogWindow']['mode'] = 'outputProject'
+        state['outputProject']['id'] = output_project_id
+
+        dialog_window.notification_box.title = 'Project with same output name founded'
+        dialog_window.notification_box.description = '''
+        Output project with name
+            <a href="{}/projects/{}/datasets"
+                           target="_blank">{}</a> already exists.<br>
+            Do you want to use existing project or create a new?
+        '''.format(
+            DataJson()['instanceAddress'],
+            output_project_id,
+            f'{g.api.project.get_info_by_id(g.input_project_id).name}_BST')
+    else:
+        state['dialogWindow']['mode'] = ''
 
 
 def update_output_class(state):

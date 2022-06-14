@@ -15,13 +15,12 @@ import src.sly_globals as g
 
 
 def init_routes():
-    g.app.add_api_route('/connect-to-model/{identifier}', settings_card.connect_to_model, methods=["POST"])
     g.app.add_api_route('/select-output-project/', settings_card.select_output_project, methods=["POST"])
     g.app.add_api_route('/select-output-class/', settings_card.select_output_class, methods=["POST"])
 
+    g.app.add_api_route('/connect-to-model/{identifier}', settings_card.connect_to_model, methods=["POST"])
     g.app.add_api_route('/windows-count-changed/', grid_controller.windows_count_changed, methods=["POST"])
 
-    g.app.add_api_route('/select-bboxes-order/', batched_smart_tool.select_bboxes_order, methods=["POST"])
     g.app.add_api_route('/bboxes-padding-changed/', batched_smart_tool.bboxes_padding_changed, methods=["POST"])
     g.app.add_api_route('/bboxes-masks-opacity-changed/', batched_smart_tool.bboxes_masks_opacity_changed,
                         methods=["POST"])
@@ -50,12 +49,9 @@ def _init_project(state):
     state['inputProject']['loading'] = False
     state['inputProject']['previewUrl'] = g.api.project.get_info_by_id(g.input_project_id).reference_image_url
 
-    state['dialogWindow']['mode'] = 'bboxesOrder'
-
-    dialog_window.notification_box.title = None
-    dialog_window.notification_box.description = 'You can annotate data in original order (how it stores in datasets)<br>' \
-                                                 'or we can automatically sort input data by in decreasing order of BBox size.<br><br>' \
-                                                 'For more comfortable labeling we recommend to use sorted data.'
+    settings_card.select_bboxes_order(state=state)
+    if settings_card.get_output_project_id() is None:
+        settings_card.select_output_project(state=state)
 
     run_sync(state.synchronize_changes())
     run_sync(DataJson().synchronize_changes())

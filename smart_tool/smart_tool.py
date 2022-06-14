@@ -25,14 +25,16 @@ class SmartTool:
         self.app = app
         self.identifier = self.get_widget_identifier(state, data)
 
-        self.image_link = None
-
-        self.image_name = None
-        self.sly_id = None
+        self._figure_id = None
+        self._object_id = None
 
         self.image_url = None
-        self.image_hash = None
-        self.image_size = None
+
+        self.video_name = None
+        self.video_id = None
+        self.frame_index = None
+        self.video_hash = None
+        self.video_size = None
 
         self.dataset_name = None
 
@@ -105,8 +107,8 @@ class SmartTool:
 
         self.scaled_bbox[0][0] = self.original_bbox[0][0] - additional_w if self.original_bbox[0][0] - additional_w > 0 else 0
         self.scaled_bbox[0][1] = self.original_bbox[0][1] - additional_h if self.original_bbox[0][1] - additional_h > 0 else 0
-        self.scaled_bbox[1][0] = self.original_bbox[1][0] + additional_w if self.original_bbox[1][0] + additional_w < self.image_size[0] else self.image_size[0] - 1
-        self.scaled_bbox[1][1] = self.original_bbox[1][1] + additional_h if self.original_bbox[1][1] + additional_h < self.image_size[1] else self.image_size[1] - 1
+        self.scaled_bbox[1][0] = self.original_bbox[1][0] + additional_w if self.original_bbox[1][0] + additional_w < self.video_size[0] else self.video_size[0] - 1
+        self.scaled_bbox[1][1] = self.original_bbox[1][1] + additional_h if self.original_bbox[1][1] + additional_h < self.video_size[1] else self.video_size[1] - 1
 
     def change_mask_opacity(self, opacity_coefficient):
         # if self.mask is not None:
@@ -190,18 +192,23 @@ class SmartTool:
         self.update_fields_by_data(new_widget_data)
 
     def update_fields_by_data(self, new_widget_data):
-        self.image_link = new_widget_data.get('imageLink', '')
+        self._figure_id = new_widget_data.get('figureId')
+        self._object_id = new_widget_data.get('objectId')
+
         self.image_url = new_widget_data.get('imageUrl', '')
-        self.image_hash = new_widget_data.get('imageHash', '')
-        self.image_name = new_widget_data.get('imageName', '')
-        self.image_size = new_widget_data.get('imageSize', '')
+        self.video_id = new_widget_data.get('videoId', '')
+        self.frame_index = new_widget_data.get('frameIndex', '')
+        self.video_hash = new_widget_data.get('videoHash', '')
+
+        self.video_name = new_widget_data.get('videoName', '')
+        self.video_size = new_widget_data.get('videoSize', '')
         self.dataset_name = new_widget_data.get('datasetName', '')
         self.positive_points = self._remove_repeated_points(new_widget_data.get('positivePoints', []))
         self.negative_points = self._remove_repeated_points(new_widget_data.get('negativePoints', []))
         self.original_bbox = new_widget_data.get('originalBbox', [])
         self.scaled_bbox = new_widget_data.get('scaledBbox', [])
         self.mask = new_widget_data.get('mask', None)
-        self.sly_id = new_widget_data.get('slyId', True)
+
         self.needs_an_update = new_widget_data.get('needsAnUpdate', False)
 
         self.is_active = new_widget_data.get('isActive', True)
@@ -213,18 +220,22 @@ class SmartTool:
     def get_data_to_send(self):
         return {
             'identifier': f'{self.identifier}',
-            'imageLink': self.image_link,
+            'figureId': self._figure_id,
+            'objectId': self._object_id,
+
             'imageUrl': self.image_url,
-            'imageHash': self.image_hash,
-            'imageName': self.image_name,
-            'imageSize': self.image_size,
+
+            'videoHash': self.video_hash,
+            'videoName': self.video_name,
+            'videoSize': self.video_size,
+
             'datasetName': self.dataset_name,
             'positivePoints': self.positive_points,
             'negativePoints': self.negative_points,
             'originalBbox': self.original_bbox,
             'scaledBbox': self.scaled_bbox,
             'mask': self.mask,
-            'slyId': self.sly_id,
+
             'needsAnUpdate': self.needs_an_update,
             'isActive': self.is_active,
             'isBroken': self.is_broken,
