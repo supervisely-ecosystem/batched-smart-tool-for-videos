@@ -143,7 +143,7 @@ def get_object_class_by_name(state, output_class_name, geometry_type=supervisely
     return obj_class
 
 
-def cache_existing_images(state):
+def cache_existing_video_info(state):
     output_project_id = state['outputProject']['id']
     datasets_in_output_project = g.api.dataset.get_list(project_id=output_project_id)
 
@@ -152,6 +152,21 @@ def cache_existing_images(state):
 
         g.videohash2videoinfo_by_datasets[current_dataset.id] = {video_info.hash: video_info for video_info in
                                                                  videos_infos}
+
+
+def cache_existing_objects_mapping_in_output_project(state):
+    project_custom_data = global_functions.get_project_custom_data(state['outputProject']['id']).get('_batched_smart_tool', {})
+    uploaded_objects_mapping = project_custom_data.get('objects_mapping', {})
+
+    for input_object_id, output_object_id in uploaded_objects_mapping.items():
+        object_key = g.key_id_map.get_object_key(int(input_object_id))
+        if object_key is not None:
+            g.output_key_id_map.add_object(object_key, output_object_id)
+
+
+def cache_existing_data(state):
+    cache_existing_video_info(state)
+    cache_existing_objects_mapping_in_output_project(state)
 
     return state
 

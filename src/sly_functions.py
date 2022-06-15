@@ -42,9 +42,21 @@ def get_project_custom_data(project_id):
 
 def append_processed_video_figures(figures_ids, project_id):
     project_custom_data = get_project_custom_data(project_id).get('_batched_smart_tool', {})
-
     project_custom_data.setdefault('processed_figures_ids', []).extend(figures_ids)
+    g.api.project.update_custom_data(project_id, {'_batched_smart_tool': project_custom_data})
 
+
+def upload_objects_mapping_to_custom_data(project_id):
+    project_custom_data = get_project_custom_data(project_id).get('_batched_smart_tool', {})
+    uploaded_objects_mapping = project_custom_data.get('objects_mapping', {})
+
+    output_mapping = g.output_key_id_map.to_dict()['objects']
+    input_mapping = g.key_id_map.to_dict()['objects']
+
+    for key, value in output_mapping.items():
+        uploaded_objects_mapping[input_mapping[key]] = output_mapping[key]
+
+    project_custom_data['objects_mapping'] = uploaded_objects_mapping
     g.api.project.update_custom_data(project_id, {'_batched_smart_tool': project_custom_data})
 
 
@@ -59,6 +71,8 @@ def get_frame_collection(video_figures) -> supervisely.FrameCollection:
         frames_list.append(supervisely.Frame(frame_index, figures_on_frame))
 
     return supervisely.FrameCollection(frames_list)
+
+
 
 
 def upload_figures_to_dataset(dataset_id, data_to_upload):
@@ -90,6 +104,7 @@ def upload_figures_to_dataset(dataset_id, data_to_upload):
                 annotation = g.video_hash_to_video_ann[video_hash].clone(frames=frame_collection)
 
                 g.api.video.annotation.append(video_info.id, annotation, g.output_key_id_map)
+                upload_objects_mapping_to_custom_data(project_id=g.output_project_id)
             else:
                 # print('video exists, nothing to do')
                 annotation = g.video_hash_to_video_ann[video_hash].clone(objects=[], frames=frame_collection)

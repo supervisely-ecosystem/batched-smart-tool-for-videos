@@ -54,7 +54,7 @@ def select_output_project(state: supervisely.app.StateJson = Depends(supervisely
                                                                     tag_name='_not_labeled_by_BTC')
     else:
         state['outputProject']['id'] = local_functions.get_output_project_id()
-        local_functions.cache_existing_images(state)
+        local_functions.cache_existing_data(state)
         local_functions.remove_processed_geometries(state)
 
         g.broken_tag_meta = local_functions.get_tag_from_project_meta(project_id=state['outputProject']['id'],
