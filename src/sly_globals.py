@@ -32,6 +32,7 @@ logger.info(f'PYTHONPATH={os.environ.get("PYTHONPATH", "")}')
 static_files_dir = src_dir_path.parent / 'static'
 temp_frames_dir = static_files_dir / 'temp_frames'
 temp_frames_dir.mkdir(exist_ok=True)
+supervisely.fs.clean_dir(temp_frames_dir.as_posix())
 
 app = FastAPI()
 
@@ -67,9 +68,10 @@ images_queue = queue.Queue(maxsize=int(1e6))
 grid_controller = GridController(SmartTool)
 
 key_id_map = KeyIdMap()
+output_key_id_map = KeyIdMap()
 
-imagehash2imageinfo_by_datasets = {}
-# imagehash2imageann = {}
+videohash2videoinfo_by_datasets = {}
+video_hash_to_video_ann = {}
 video_figure_id_to_video_figure = {}
 
 processed_geometries = []

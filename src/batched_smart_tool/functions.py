@@ -42,10 +42,6 @@ def update_single_widget_realtime(widget, state):
         logger.warning(f'{ex}')
 
 
-
-
-
-
 def new_masks_available_flag():
     for widget in g.grid_controller.widgets.values():
         if widget.needs_an_update:

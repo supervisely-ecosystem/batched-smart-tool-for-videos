@@ -64,6 +64,7 @@ def select_output_project(state: supervisely.app.StateJson = Depends(supervisely
     select_output_class(state=state)  # selecting first class from table
 
     g.broken_image_object = local_functions.get_object_class_by_name(state, 'image', supervisely.Rectangle)
+    local_functions.convert_annotations_to_bitmaps(state=state)
 
     # grid_controller.handlers.windows_count_changed(state=state)
 

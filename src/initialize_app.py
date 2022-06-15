@@ -12,6 +12,7 @@ import src.select_class as select_class
 import src.settings_card as settings_card
 
 import src.sly_globals as g
+import src.sly_functions as f
 
 
 def init_routes():

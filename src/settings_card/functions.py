@@ -28,7 +28,7 @@ def get_bboxes_from_annotation(video_annotation):
         if video_figure.geometry.geometry_name() == 'rectangle':
             bbox = video_figure.geometry.to_bbox()
 
-            video_figure_id = g.key_id_map.get_object_id(video_figure.key())
+            video_figure_id = g.key_id_map.get_figure_id(video_figure.key())
 
             bboxes.append({
                 'label': video_figure.video_object.obj_class.name,
@@ -100,6 +100,8 @@ def get_annotations_for_dataset(dataset_id, videos):
 def get_crops_for_queue(video_info, video_annotation_json, current_dataset, project_meta):
     video_annotation = supervisely.VideoAnnotation.from_json(video_annotation_json, project_meta, g.key_id_map)
 
+    g.video_hash_to_video_ann[video_info.hash] = video_annotation
+
     bboxes = get_bboxes_from_annotation(video_annotation)
     data_to_render = get_data_to_render(video_info, bboxes, current_dataset)
     return data_to_render
@@ -146,10 +148,10 @@ def cache_existing_images(state):
     datasets_in_output_project = g.api.dataset.get_list(project_id=output_project_id)
 
     for current_dataset in datasets_in_output_project:
-        images_info = g.api.image.get_list(dataset_id=current_dataset.id)
+        videos_infos = g.api.video.get_list(dataset_id=current_dataset.id)
 
-        g.imagehash2imageinfo_by_datasets[current_dataset.id] = {image_info.hash: image_info for image_info in
-                                                                 images_info}
+        g.videohash2videoinfo_by_datasets[current_dataset.id] = {video_info.hash: video_info for video_info in
+                                                                 videos_infos}
 
     return state
 
@@ -228,7 +230,7 @@ def update_selected_queue(state):
 
 def remove_processed_geometries(state):
     custom_data = global_functions.get_project_custom_data(state['outputProject']['id']).get('_batched_smart_tool', {})
-    processed_geometries_ids = custom_data.get('processed_geometries', [])
+    processed_geometries_ids = custom_data.get('processed_figures_ids', [])
 
     for label, queue in g.classes2queues.items():
         updated_queue = Queue(maxsize=int(1e6))
@@ -270,3 +272,15 @@ def get_tag_from_project_meta(project_id, tag_name):
     if tag_meta is None:
         tag_meta = add_tag_to_project_meta(project_id, tag_name)
     return tag_meta
+
+
+def convert_annotations_to_bitmaps(state):
+    for video_hash, video_annotation in g.video_hash_to_video_ann.items():
+        video_objects = []
+        for video_object in video_annotation.objects:
+            # video_object.obj_class
+            obj_class = get_object_class_by_name(state, video_object.obj_class.name)
+            video_objects.append(video_object.clone(obj_class=obj_class))
+        updated_video_objects = supervisely.VideoObjectCollection(video_objects)
+        g.video_hash_to_video_ann[video_hash] = video_annotation.clone(objects=updated_video_objects)
+

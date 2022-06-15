@@ -3,7 +3,6 @@ from supervisely.app import StateJson, DataJson
 from .handlers import *
 from .functions import *
 
-
 StateJson()['showViewer'] = True
 
 StateJson()['inputProject'] = {
@@ -39,5 +38,3 @@ DataJson()['connectorOptions'] = {
     "showLabel": False,
     "size": "small"
 }
-
-

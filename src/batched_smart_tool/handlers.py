@@ -213,13 +213,14 @@ def next_batch(state: supervisely.app.StateJson = Depends(supervisely.app.StateJ
     for current_dataset_name, widget_data in widgets_data_by_datasets.items():
         if isinstance(current_dataset_name, str):
             ds_id = f.get_dataset_id_by_name(current_dataset_name, state['outputProject']['id'])
-            f.upload_images_to_dataset(dataset_id=ds_id, data_to_upload=widget_data)
+            f.upload_figures_to_dataset(dataset_id=ds_id, data_to_upload=widget_data)
 
     state['batchInUpload'] = False
 
     # 4 - update stats in table
     sc_functions.update_classes_table()
     global_functions.update_queues_stats(state)
+    global_functions.put_n_frames_to_queue(g.selected_queue)
 
     run_sync(state.synchronize_changes())
     run_sync(DataJson().synchronize_changes())
