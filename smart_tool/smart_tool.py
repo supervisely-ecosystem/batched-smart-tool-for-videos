@@ -226,6 +226,8 @@ class SmartTool:
             'imageUrl': self.image_url,
 
             'videoHash': self.video_hash,
+            'videoId': self.video_id,
+            'frameIndex': self.frame_index,
             'videoName': self.video_name,
             'videoSize': self.video_size,
 

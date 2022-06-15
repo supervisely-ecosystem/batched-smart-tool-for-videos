@@ -142,7 +142,10 @@ def get_data_from_widget_to_compute_masks(widget):
                 "y": negative_points['position'][0][1]
             } for negative_points in widget_data['negativePoints']
         ],
-        "image_hash": f"{widget_data['imageHash']}",
+        "video": {
+            'video_id': f"{widget_data['videoId']}",
+            'frame_index': f"{widget_data['frameIndex']}",
+        },
         "predict_every_click": g.prediction_mode == 'consistent'
     }
 

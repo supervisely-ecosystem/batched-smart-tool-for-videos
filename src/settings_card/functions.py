@@ -89,10 +89,7 @@ def get_data_to_render(video_info, bboxes, current_dataset):
 
 def put_data_to_queues(data_to_render):
     for item in data_to_render:
-        if item['label'] != 'image':
-            g.classes2queues.setdefault(item['label'], Queue(maxsize=int(1e6))).put(item)
-        else:
-            g.images_queue.put(item)
+        g.classes2queues.setdefault(item['label'], Queue(maxsize=int(1e6))).put(item)
 
 
 def get_annotations_for_dataset(dataset_id, videos):
@@ -187,6 +184,7 @@ def select_input_project(identifier: str, state):
 
 
 def select_bboxes_order(state):
+    g.crops_data = sorted(g.crops_data, key=lambda d: d['objectId'], reverse=True)
     put_data_to_queues(data_to_render=g.crops_data)
 
     sc_functions.init_table_data()  # fill classes table
@@ -224,10 +222,8 @@ def update_output_class(state):
 
 
 def update_selected_queue(state):
-    if state['queueMode'] == 'objects':
-        g.selected_queue = g.classes2queues[g.output_class_name]
-    else:
-        g.selected_queue = g.images_queue
+    g.selected_queue = g.classes2queues[g.output_class_name]
+
 
 
 def remove_processed_geometries(state):
@@ -243,7 +239,6 @@ def remove_processed_geometries(state):
         g.classes2queues[label] = updated_queue
 
     select_class.update_classes_table()
-    run_sync(DataJson().synchronize_changes())
 
 
 def get_output_project_id():

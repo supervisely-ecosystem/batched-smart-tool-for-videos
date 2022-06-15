@@ -85,6 +85,7 @@ def select_output_class(state: supervisely.app.StateJson = Depends(supervisely.a
 
     local_functions.update_selected_queue(state)
     state['queueIsEmpty'] = g.selected_queue.empty()
+    global_functions.put_n_frames_to_queue(g.selected_queue)
 
     grid_controller_handlers.windows_count_changed(state=state)
     run_sync(state.synchronize_changes())

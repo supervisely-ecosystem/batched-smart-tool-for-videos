@@ -5,7 +5,7 @@ def progress_bar_formatter(value):
     return f'''<el-progress 
                     :percentage="{value}" 
                     :text-inside="true"
-                    :stroke-width="18" style="width: 320px">
+                    :stroke-width="18" style="width: 170px">
                     </el-progress>'''
 
 

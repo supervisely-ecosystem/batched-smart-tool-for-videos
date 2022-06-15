@@ -1,6 +1,8 @@
 import asyncio
 import functools
 import os
+import pathlib
+import time
 import uuid
 
 import jinja2
@@ -131,3 +133,32 @@ def update_queues_stats(state):
 
     select_class.update_classes_table()  # @TODO: update table by objects ids
 
+
+@functools.lru_cache(maxsize=32)
+def download_frame_from_video_with_cache(video_id, frame_index) -> pathlib.Path:
+    filename = f'{uuid.uuid4()}_{time.time_ns()}.png'
+
+    file_path = g.temp_frames_dir / filename
+    g.api.video.frame.download_path(
+        video_id=video_id,
+        frame_index=frame_index,
+        path=file_path.as_posix()
+    )
+    return pathlib.Path('./static', 'temp_frames', filename)
+
+
+def put_n_frames_to_queue(queue, n=50):
+    for index, item in enumerate(queue.queue):
+        if item['imageUrl'] is None:
+
+            file_path = download_frame_from_video_with_cache(
+                video_id=item['videoId'],
+                frame_index=item['frameIndex']
+            )
+
+            item.update({'imageUrl': file_path.as_posix()})
+            queue.queue[index] = item
+            print()
+
+        if index == n:
+            break
