@@ -33,6 +33,7 @@ class SmartTool:
 
         self.video_name = None
         self.video_id = None
+        self.frame_in_clicker_url = None
         self.frame_index = None
         self.video_hash = None
         self.video_size = None
@@ -204,6 +205,7 @@ class SmartTool:
         self.video_hash = new_widget_data.get('videoHash', '')
 
         self.video_name = new_widget_data.get('videoName', '')
+        self.frame_in_clicker_url = new_widget_data.get('frameInClickerUrl', '')
         self.video_size = new_widget_data.get('videoSize', '')
         self.dataset_name = new_widget_data.get('datasetName', '')
         self.positive_points = self._remove_repeated_points(new_widget_data.get('positivePoints', []))
@@ -233,6 +235,7 @@ class SmartTool:
             'videoId': self.video_id,
             'frameIndex': self.frame_index,
             'videoName': self.video_name,
+            'frameInClickerUrl': self.frame_in_clicker_url,
             'videoSize': self.video_size,
 
             'datasetName': self.dataset_name,

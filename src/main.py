@@ -19,7 +19,7 @@ def read_index(request: Request):
                                                            'smart_tool': SmartTool})
 
 
-
+# @TODO: move broken_tag from objects to figures (SDK request)
 # @TODO: open in annotator button
 # @TODO: maximum vertical size ?
 

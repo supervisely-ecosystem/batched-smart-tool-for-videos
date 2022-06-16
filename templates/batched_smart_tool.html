@@ -142,7 +142,7 @@
 
                     <el-tooltip placement="bottom" effect="light" :open-delay="900">
                         <div style="text-align: center" slot="content">
-                            you can label <b>objects</b> and <b>entire images</b>
+                            select object name to label
                         </div>
                         <div style="padding: 0 10px; display: flex; justify-content: center; align-items: center;
                         border-right: solid black 1px">
@@ -165,6 +165,7 @@
                                 <el-button
                                         accesskey="z"
                                         :plain="true"
+                                        :disabled="!state.outputClassName"
                                         type="success" class="regular" size="small"
                                         style="margin: 0 4px; padding: 10px 4px; width: 140px"
                                         @click="state.selectClassVisible=true"
@@ -180,7 +181,13 @@
                                                     text-overflow: ellipsis;
                                                     overflow-x: hidden;
                                                     overflow-y: hidden;">
-                                            {{ state.outputClassName }}
+                                            <div v-if="state.outputClassName">
+                                                {{ state.outputClassName }}
+                                            </div>
+                                            <div v-else style="color: lightgray">
+                                                none
+                                            </div>
+
                                         </span>
 
                                         <div style="position: absolute; right: 3px; ">

@@ -50,6 +50,8 @@ def _init_project(state):
     state['inputProject']['loading'] = False
     state['inputProject']['previewUrl'] = g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', '')
 
+    print(g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', ''))
+
     settings_card.select_bboxes_order(state=state)
     if settings_card.get_output_project_id() is None:
         settings_card.select_output_project(state=state)

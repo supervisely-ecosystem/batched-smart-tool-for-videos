@@ -61,11 +61,14 @@ def select_output_project(state: supervisely.app.StateJson = Depends(supervisely
                                                                       tag_name='_not_labeled_by_BTC')
 
     g.output_project_id = state['outputProject']['id']
-    select_output_class(state=state)  # selecting first class from table
+    local_functions.update_output_class(state)
 
-    g.broken_image_object = local_functions.get_object_class_by_name(state, 'image', supervisely.Rectangle)
+    if g.output_class_name is not None:
+        select_output_class(state=state)  # selecting first class from table
+    else:
+        state['queueIsEmpty'] = True
+
     local_functions.convert_annotations_to_bitmaps(state=state)
-    # grid_controller.handlers.windows_count_changed(state=state)
 
     state['outputProject']['loading'] = False
     state['dialogWindow']['mode'] = None

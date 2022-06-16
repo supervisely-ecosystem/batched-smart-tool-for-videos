@@ -1,5 +1,6 @@
 import copy
 import functools
+import pathlib
 from queue import Queue
 
 import numpy as np
@@ -68,6 +69,7 @@ def get_data_to_render(video_info, bboxes, current_dataset):
 
             'videoName': f'{video_info.name}',
             'videoId': f'{video_info.id}',
+            'frameInClickerUrl': pathlib.Path(DataJson()["instanceAddress"], f"app/videos/?datasetId={current_dataset.id}&videoFrame={frame_index}&videoId={video_info.id}").as_posix(),
             'videoHash': f'{video_info.hash}',
             'videoSize': tuple([video_info.frame_width, video_info.frame_height]),
 
@@ -233,8 +235,7 @@ def update_output_class(state):
     if state['queueMode'] == 'objects' and selected_row is not None:
         g.output_class_name = selected_row[0]
     else:
-        state['queueMode'] = 'images'
-        g.output_class_name = 'image'
+        g.output_class_name = None
 
 
 def update_selected_queue(state):
@@ -271,11 +272,12 @@ def copy_meta_from_input_to_output(output_project_id):
 def add_tag_to_project_meta(project_id, tag_name):
     project_meta = supervisely.ProjectMeta.from_json(g.api.project.get_meta(project_id))
     tag_meta = supervisely.TagMeta(name=tag_name, value_type=supervisely.TagValueType.ANY_STRING)
-    project_meta = project_meta.clone(tag_metas=project_meta.tag_metas.add(tag_meta))
-    g.api.project.update_meta(project_id, project_meta.to_json())
 
-    logger.info(f'new tag added to project meta: {project_id=}, {tag_name=}')
+    if project_meta.get_tag_meta(tag_name) is None:
+        project_meta = project_meta.clone(tag_metas=project_meta.tag_metas.add(tag_meta))
+        g.api.project.update_meta(project_id, project_meta.to_json())
 
+        logger.info(f'new tag added to project meta: {project_id=}, {tag_name=}')
     return tag_meta
 
 

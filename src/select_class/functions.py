@@ -42,7 +42,7 @@ def update_classes_table():
     for row in actual_rows:
         label = row[0]
         if label == g.output_class_name:
-            row[2] = len(queues[labels.index(label)].queue) + len([widget for widget in g.grid_controller.widgets.values() if widget.is_active is True])  # left
+            row[2] = len(queues[labels.index(label)].queue) + len([widget for widget in g.grid_controller.widgets.values() if widget.is_empty is False])  # left
 
             update_classes_progress(label=label, total=row[3], n=row[3]-row[2])
         else:

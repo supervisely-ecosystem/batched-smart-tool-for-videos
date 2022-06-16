@@ -82,7 +82,7 @@
                 <i class="zmdi zmdi-thumb-up checkers"
                    :style="[widget.isFinished  ? {'background': '#96cc4b'} : {'background': '#b8b8b8'}]"></i>
             </el-button>
-            <a :href="`${widget.imageLink}`"
+            <a :href="`${widget.frameInClickerUrl}`"
                target="_blank" style="padding: 2px 2px; margin: 0; flex: 1 1 10%; text-align: center">
                 <i class="zmdi zmdi-arrow-right-top checkers" style="background: #b8b8b8"></i>
 
@@ -104,8 +104,9 @@
                 @update:negative-points="widget.negativePoints = $event; widget.lastCall = Math.floor(Date.now());  post('/widgets/smarttool/negative-updated/' + widget.identifier)">
 
         </smarttool-editor>
-        <div style="display: flex; align-items: center; justify-content: flex-end; position: absolute; bottom: 0; width: 100%; z-index: 10001; ">
-            <span style="cursor:default; color: rgba(255, 255, 255, 0.3); font-size: 10px; text-align: right; margin: 2px 3px">OBJECT ID: {{ widget.objectId }}</span>
+        <div style="display: flex; align-items: center; justify-content: space-between; position: absolute; bottom: 0; width: 100%; z-index: 10001; ">
+            <span style="cursor:default; color: rgba(255, 255, 255, 0.40); font-size: 9px; text-align: right; margin: 2px 3px">FRAME: {{ widget.frameIndex }}</span>
+            <span style="cursor:default; color: rgba(255, 255, 255, 0.40); font-size: 9px; text-align: right; margin: 2px 3px">OBJECT ID: {{ widget.objectId }}</span>
         </div>
     </div>
 
