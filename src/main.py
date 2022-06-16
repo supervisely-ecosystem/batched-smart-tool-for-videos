@@ -20,9 +20,6 @@ def read_index(request: Request):
 
 
 # @TODO: move broken_tag from objects to figures (SDK request)
-# @TODO: open in annotator button
-# @TODO: maximum vertical size ?
-
 
 @g.app.on_event("startup")
 async def startup_event():
