@@ -6,7 +6,10 @@ import time
 import uuid
 
 import jinja2
+import numpy as np
 from starlette.templating import Jinja2Templates
+from supervisely.video_annotation.video_tag_collection import VideoTagCollection
+from supervisely.video_annotation.video_tag import VideoTag
 
 import supervisely
 
@@ -18,7 +21,25 @@ from supervisely.app import DataJson
 
 def get_supervisely_video_figure_by_widget_data(widget_data):
     video_figure: supervisely.VideoFigure = g.video_figure_id_to_video_figure.get(widget_data['figureId'], None)
-    # widget_data.get('isBroken', False) and
+
+    if widget_data.get('isBroken', False) is True:
+        geometry = supervisely.Bitmap(
+            np.ones([widget_data['originalBbox'][1][1] - widget_data['originalBbox'][0][1],
+                     widget_data['originalBbox'][1][0] - widget_data['originalBbox'][0][0]]).astype(bool),
+            origin=supervisely.PointLocation(row=widget_data['originalBbox'][0][1],
+                                             col=widget_data['originalBbox'][0][0])
+        )
+
+        not_labeled_tag = VideoTag(
+            g.broken_tag_meta,
+            value='not annotated',
+            frame_range=[widget_data['frameIndex'], widget_data['frameIndex']]
+        )
+
+        video_object = video_figure.video_object.clone(obj_class=g.output_class_object,
+                                                       tags=VideoTagCollection([not_labeled_tag]))
+
+        return video_figure.clone(video_object=video_object, geometry=geometry)
 
     if video_figure is not None and widget_data.get('mask') is not None and widget_data.get('originalBbox') is not None:
         mask_np = supervisely.Bitmap.base64_2_data(widget_data['mask']['data'])
@@ -73,6 +94,16 @@ def get_frame_collection(video_figures) -> supervisely.FrameCollection:
     return supervisely.FrameCollection(frames_list)
 
 
+def upload_broken_objects_tags(video_info, video_figures):
+    broken_objects_list = [video_figure.video_object for video_figure in video_figures]
+    g.api.video.tag.append_to_objects(
+        entity_id=video_info.id,
+        project_id=g.output_project_id,
+        objects=broken_objects_list,
+        key_id_map=g.output_key_id_map
+    )
+
+
 def upload_figures_to_dataset(dataset_id, data_to_upload):
     hash2annotation = {}
     hash_to_video_figures = {}
@@ -102,12 +133,12 @@ def upload_figures_to_dataset(dataset_id, data_to_upload):
                 annotation = g.video_hash_to_video_ann[video_hash].clone(frames=frame_collection)
 
                 g.api.video.annotation.append(video_info.id, annotation, g.output_key_id_map)
+                upload_broken_objects_tags(video_info, video_figures)
                 upload_objects_mapping_to_custom_data(project_id=g.output_project_id)
             else:
-                # print('video exists, nothing to do')
                 annotation = g.video_hash_to_video_ann[video_hash].clone(objects=[], frames=frame_collection)
                 g.api.video.annotation.append(video_info.id, annotation, g.output_key_id_map)
-                # g.api.annotation.append_labels(video_info.id, labels)
+                upload_broken_objects_tags(video_info, video_figures)
 
     append_processed_video_figures(
         figures_ids=[item['figureId'] for item in data_to_upload if item['figureId'] is not None],
@@ -161,9 +192,9 @@ def download_frame_from_video_with_cache(video_id, frame_index) -> (pathlib.Path
     return file_path, pathlib.Path('./static', 'temp_frames', filename)
 
 
-def put_n_frames_to_queue(queue, n=64):
+def put_n_frames_to_queue(queue, n=1):
     for index, item in enumerate(queue.queue):
-        if item['imageUrl'] is None or os.path.isfile(item['imagePath']) is False:
+        if item['imageUrl'] is None or item['imagePath'] is None or os.path.isfile(item['imagePath']) is False:
             file_path, file_url = download_frame_from_video_with_cache(
                 video_id=item['videoId'],
                 frame_index=item['frameIndex']

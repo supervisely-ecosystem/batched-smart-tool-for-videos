@@ -19,7 +19,7 @@ def read_index(request: Request):
                                                            'smart_tool': SmartTool})
 
 
-# @TODO: dislike button
+
 # @TODO: open in annotator button
 # @TODO: maximum vertical size ?
 

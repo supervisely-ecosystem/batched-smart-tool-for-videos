@@ -76,7 +76,7 @@ class GridController:
             new_data = images_queue.get()
 
             widget.is_active = True
-            if new_data['imageUrl'] is None or os.path.isfile(new_data['imagePath']) is False:
+            if new_data['imageUrl'] is None or new_data['imagePath'] or os.path.isfile(new_data['imagePath']) is False:
                 file_path, file_url = global_functions.download_frame_from_video_with_cache(
                     video_id=new_data['videoId'],
                     frame_index=new_data['frameIndex']
@@ -98,7 +98,7 @@ class GridController:
         if len(identifiers) > 0:
             last_object = self.widgets.pop(identifiers[-1])
 
-            if images_queue is not None:
+            if images_queue is not None and not last_object.is_empty:
                 images_queue.queue.appendleft(last_object.get_data_to_send())
             else:
                 if last_object.image_path is not None and os.path.isfile(last_object.image_path):
