@@ -46,7 +46,7 @@ def connect_to_model(identifier: str,
 def select_output_project(state: supervisely.app.StateJson = Depends(supervisely.app.StateJson.from_request)):
     g.imagehash2imageinfo_by_datasets = {}  # reset output images cache
     g.grid_controller.clean_all(state=state, data=DataJson(), images_queue=g.selected_queue)
-
+    print('passed00')
     if state['outputProject']['mode'] == 'new':
         local_functions.create_new_project_by_name(state)
         local_functions.copy_meta_from_input_to_output(state['outputProject']['id'])
@@ -65,7 +65,6 @@ def select_output_project(state: supervisely.app.StateJson = Depends(supervisely
 
     g.broken_image_object = local_functions.get_object_class_by_name(state, 'image', supervisely.Rectangle)
     local_functions.convert_annotations_to_bitmaps(state=state)
-
     # grid_controller.handlers.windows_count_changed(state=state)
 
     state['outputProject']['loading'] = False

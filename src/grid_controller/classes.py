@@ -24,8 +24,12 @@ class GridController:
         self._origin_widget_class = origin_widget_class
         self.widgets = {}
 
+        self._current_object_id = None
+
     @process_with_lock
     def change_count(self, actual_count, app, state, data, images_queue):
+        self._current_object_id = None
+
         while actual_count > len(self.widgets) and not images_queue.empty():
             self._add(app, state, data, images_queue)
 
@@ -61,9 +65,17 @@ class GridController:
         widget.is_active = False
 
         if not images_queue.empty():
-            widget.is_active = True
+            next_object_id = images_queue.queue[0]['objectId']  # show only objects with same IDs
+
+            if self._current_object_id is None:
+                self._current_object_id = next_object_id
+            elif self._current_object_id != next_object_id:
+                self.widgets[widget.identifier] = widget
+                return
+
             new_data = images_queue.get()
 
+            widget.is_active = True
             if new_data['imageUrl'] is None or os.path.isfile(new_data['imagePath']) is False:
                 file_path, file_url = global_functions.download_frame_from_video_with_cache(
                     video_id=new_data['videoId'],
@@ -89,7 +101,7 @@ class GridController:
             if images_queue is not None:
                 images_queue.queue.appendleft(last_object.get_data_to_send())
             else:
-                if os.path.isfile(last_object.image_path):
+                if last_object.image_path is not None and os.path.isfile(last_object.image_path):
                     os.remove(last_object.image_path)
 
             last_object.remove_remote_fields(state=state, data=data)

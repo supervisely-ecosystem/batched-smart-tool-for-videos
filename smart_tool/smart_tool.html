@@ -1,112 +1,112 @@
 {% if identifier %}
 
-<div
-        v-loading="state.updatingMasks && (state.widgets['{{{identifier}}}'].needsAnUpdate || state.widgets['{{{identifier}}}'].isActive)"
-        id="batched-smart-tool-widget-container-{{{identifier}}}"
-        style="width: 250px; height:250px;
+    <div
+            v-loading="state.updatingMasks && (state.widgets['{{{ identifier }}}'].needsAnUpdate || state.widgets['{{{ identifier }}}'].isActive)"
+            id="batched-smart-tool-widget-container-{{{ identifier }}}"
+            style="width: 250px; height:250px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
                         position: relative"
 
-        :style="[state.widgets['{{{identifier}}}'].needsAnUpdate ? {'border': '#ff6600 solid 2px'} : {'border': '#77b4ff solid 2px'}]"
+            :style="[state.widgets['{{{ identifier }}}'].needsAnUpdate ? {'border': '#ff6600 solid 2px'} : {'border': '#77b4ff solid 2px'}]"
 
 
->
-    <div style="display: flex; align-items: center; justify-content: space-between; position: absolute; width: 100%">
-        <el-button v-model="state.widgets['{{{identifier}}}'].isActive"
-                   style="padding: 5px"
-                   type="text"
-                   :disabled="state.widgets['{{{identifier}}}'].scaledBbox.length == 0"
+    >
+        <div style="display: flex; align-items: center; justify-content: space-between; position: absolute; width: 100%">
+            <el-button v-model="state.widgets['{{{ identifier }}}'].isActive"
+                       style="padding: 5px"
+                       type="text"
+                       :disabled="state.widgets['{{{ identifier }}}'].scaledBbox.length == 0"
 
-                   @click="state.widgets['{{{identifier}}}'].isActive = !state.widgets['{{{identifier}}}'].isActive"
+                       @click="state.widgets['{{{ identifier }}}'].isActive = !state.widgets['{{{ identifier }}}'].isActive"
 
-        >
-            <i class="zmdi zmdi-link checkers"
-               :style="[state.widgets['{{{identifier}}}'].isActive  ? {'background': '#77b4ff'} : {'background': '#b8b8b8'}]"
-            ></i>
-        </el-button>
+            >
+                <i class="zmdi zmdi-link checkers"
+                   :style="[state.widgets['{{{ identifier }}}'].isActive  ? {'background': '#77b4ff'} : {'background': '#b8b8b8'}]"
+                ></i>
+            </el-button>
 
+        </div>
+        <smarttool-editor
+                style="width: 100%; height: 100%;"
+                :mask-opacity="state.masksOpacity / 100"
+                :mask="state.widgets['{{{ identifier }}}'].mask"
+                :image-url="state.widgets['{{{ identifier }}}'].imageUrl"
+                :bbox.sync="state.widgets['{{{ identifier }}}'].scaledBbox"
+                @update:bbox="state.widgets['{{{ identifier }}}'].scaledBbox = $event; post('/widgets/smarttool/bbox-updated/{{{ identifier }}}')"
+                :positive-points="state.widgets['{{{ identifier }}}'].positivePoints"
+                @update:positive-points="state.widgets['{{{ identifier }}}'].positivePoints = $event; post('/widgets/smarttool/positive-updated/{{{ identifier }}}')"
+                :negative-points="state.widgets['{{{ identifier }}}'].negativePoints"
+                @update:negative-points="state.widgets['{{{ identifier }}}'].negativePoints = $event; post('/widgets/smarttool/negative-updated/{{{ identifier }}}')">
+
+        </smarttool-editor>
     </div>
-    <smarttool-editor
-            style="width: 100%; height: 100%;"
-            :mask-opacity="state.masksOpacity / 100"
-            :mask="state.widgets['{{{identifier}}}'].mask"
-            :image-url="state.widgets['{{{identifier}}}'].imageUrl"
-            :bbox.sync="state.widgets['{{{identifier}}}'].scaledBbox"
-            @update:bbox="state.widgets['{{{identifier}}}'].scaledBbox = $event; post('/widgets/smarttool/bbox-updated/{{{identifier}}}')"
-            :positive-points="state.widgets['{{{identifier}}}'].positivePoints"
-            @update:positive-points="state.widgets['{{{identifier}}}'].positivePoints = $event; post('/widgets/smarttool/positive-updated/{{{identifier}}}')"
-            :negative-points="state.widgets['{{{identifier}}}'].negativePoints"
-            @update:negative-points="state.widgets['{{{identifier}}}'].negativePoints = $event; post('/widgets/smarttool/negative-updated/{{{identifier}}}')">
-
-    </smarttool-editor>
-</div>
 
 {% else %}
 
-<div v-loading="state.updatingMasks && (widget.needsAnUpdate || widget.isActive) && !(widget.isFinished || widget.isBroken)"
-     style="width: 100%; height:100%;
+    <div v-loading="state.updatingMasks && (widget.needsAnUpdate || widget.isActive) && !(widget.isFinished || widget.isBroken)"
+         style="width: 100%; height:100%;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
                         position: relative;
                         box-sizing: border-box"
+         v-if="widget.imageUrl"
+         :style="[widget.needsAnUpdate && !widget.isBroken && !widget.isFinished ? {'border': '#ff6600 solid 2px'} : {'border': '#77b4ff solid 2px'}]"
 
-     :style="[widget.needsAnUpdate && !widget.isBroken && !widget.isFinished ? {'border': '#ff6600 solid 2px'} : {'border': '#77b4ff solid 2px'}]"
 
+    >
 
->
+        <div style="display: flex; align-items: center; justify-content: space-between; position: absolute; width: 100%; z-index: 10001;">
+            <el-button
+                    type="text"
+                    style="padding: 2px 2px; margin: 0; flex: 1 1 10%"
+                    :disabled="widget.scaledBbox.length == 0"
 
-    <div style="display: flex; align-items: center; justify-content: space-between; position: absolute; width: 100%; z-index: 10001;">
-        <el-button
-                type="text"
-                style="padding: 2px 2px; margin: 0; flex: 1 1 10%"
-                :disabled="widget.scaledBbox.length == 0"
+                    @click="widget.isActive = !widget.isActive; post('/update-locals/');">
+                <i class="zmdi zmdi-link checkers"
+                   :style="[widget.isActive && !widget.isBroken && !widget.isFinished  ? {'background': '#20a0ff'} : {'background': '#b8b8b8'}]"></i>
+            </el-button>
+            <el-button
+                    type="text"
+                    style="padding: 2px 2px; margin: 0; flex: 1 1 10%"
+                    @click="widget.isBroken = !widget.isBroken; widget.isFinished=false; widget.isActive=false; post('/update-locals/');">
+                <i class="zmdi zmdi-thumb-down checkers"
+                   :style="[widget.isBroken  ? {'background': '#ff4f4f'} : {'background': '#b8b8b8'}]"></i>
+            </el-button>
+            <el-button
+                    type="text"
+                    style="padding: 2px 2px; margin: 0; flex: 1 1 10%"
+                    @click="widget.isFinished = !widget.isFinished; ; widget.isBroken=false; widget.isActive=false; post('/update-locals/');">
+                <i class="zmdi zmdi-thumb-up checkers"
+                   :style="[widget.isFinished  ? {'background': '#96cc4b'} : {'background': '#b8b8b8'}]"></i>
+            </el-button>
+            <a :href="`${widget.imageLink}`"
+               target="_blank" style="padding: 2px 2px; margin: 0; flex: 1 1 10%; text-align: center">
+                <i class="zmdi zmdi-arrow-right-top checkers" style="background: #b8b8b8"></i>
 
-                @click="widget.isActive = !widget.isActive; post('/update-locals/');">
-            <i class="zmdi zmdi-link checkers"
-               :style="[widget.isActive && !widget.isBroken && !widget.isFinished  ? {'background': '#20a0ff'} : {'background': '#b8b8b8'}]"></i>
-        </el-button>
-        <el-button
-                type="text"
-                style="padding: 2px 2px; margin: 0; flex: 1 1 10%"
-                @click="widget.isBroken = !widget.isBroken; widget.isFinished=false; widget.isActive=false; post('/update-locals/');">
-            <i class="zmdi zmdi-thumb-down checkers"
-               :style="[widget.isBroken  ? {'background': '#ff4f4f'} : {'background': '#b8b8b8'}]"></i>
-        </el-button>
-        <el-button
-                type="text"
-                style="padding: 2px 2px; margin: 0; flex: 1 1 10%"
-                @click="widget.isFinished = !widget.isFinished; ; widget.isBroken=false; widget.isActive=false; post('/update-locals/');">
-            <i class="zmdi zmdi-thumb-up checkers"
-               :style="[widget.isFinished  ? {'background': '#96cc4b'} : {'background': '#b8b8b8'}]"></i>
-        </el-button>
-        <a :href="`${widget.imageLink}`"
-           target="_blank" style="padding: 2px 2px; margin: 0; flex: 1 1 10%; text-align: center">
-            <i class="zmdi zmdi-arrow-right-top checkers" style="background: #b8b8b8"></i>
+            </a>
 
-        </a>
+        </div>
+        <smarttool-editor
+                :disabled="widget.isFinished || widget.isBroken"
 
+                style="width: 100%; height: 100%;"
+                :mask-opacity="state.masksOpacity / 100"
+                :mask="widget.mask"
+                :image-url="widget.imageUrl"
+                :bbox.sync="widget.scaledBbox"
+                @update:bbox="widget.scaledBbox = $event; post('/widgets/smarttool/bbox-updated/' + widget.identifier)"
+                :positive-points="widget.positivePoints"
+                @update:positive-points="widget.positivePoints = $event; widget.lastCall = Math.floor(Date.now()); post('/widgets/smarttool/positive-updated/' + widget.identifier)"
+                :negative-points="widget.negativePoints"
+                @update:negative-points="widget.negativePoints = $event; widget.lastCall = Math.floor(Date.now());  post('/widgets/smarttool/negative-updated/' + widget.identifier)">
+
+        </smarttool-editor>
+        <div style="display: flex; align-items: center; justify-content: flex-end; position: absolute; bottom: 0; width: 100%; z-index: 10001; ">
+            <span style="cursor:default; color: rgba(255, 255, 255, 0.3); font-size: 10px; text-align: right; margin: 2px 3px">OBJECT ID: {{ widget.objectId }}</span>
+        </div>
     </div>
-    <smarttool-editor
-            :disabled="widget.isFinished || widget.isBroken"
-            v-if="widget.imageUrl"
-            style="width: 100%; height: 100%;"
-            :mask-opacity="state.masksOpacity / 100"
-            :mask="widget.mask"
-            :image-url="widget.imageUrl"
-            :bbox.sync="widget.scaledBbox"
-            @update:bbox="widget.scaledBbox = $event; post('/widgets/smarttool/bbox-updated/' + widget.identifier)"
-            :positive-points="widget.positivePoints"
-            @update:positive-points="widget.positivePoints = $event; widget.lastCall = Math.floor(Date.now()); post('/widgets/smarttool/positive-updated/' + widget.identifier)"
-            :negative-points="widget.negativePoints"
-            @update:negative-points="widget.negativePoints = $event; widget.lastCall = Math.floor(Date.now());  post('/widgets/smarttool/negative-updated/' + widget.identifier)">
-
-    </smarttool-editor>
-    <div style="display: flex; align-items: center; justify-content: flex-end; position: absolute; bottom: 0; width: 100%; z-index: 10001; ">
-        <span style="cursor:default; color: rgba(255, 255, 255, 0.3); font-size: 10px; text-align: right; margin: 2px 3px">OBJECT ID: {{ widget.objectId }}</span>
-    </div>
-</div>
 
 {% endif %}

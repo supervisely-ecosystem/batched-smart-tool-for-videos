@@ -168,7 +168,6 @@ def put_n_frames_to_queue(queue, n=64):
                 video_id=item['videoId'],
                 frame_index=item['frameIndex']
             )
-
             item.update({
                 'imageUrl': file_url.as_posix(),
                 'imagePath': file_path.as_posix()
