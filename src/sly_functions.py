@@ -73,8 +73,6 @@ def get_frame_collection(video_figures) -> supervisely.FrameCollection:
     return supervisely.FrameCollection(frames_list)
 
 
-
-
 def upload_figures_to_dataset(dataset_id, data_to_upload):
     hash2annotation = {}
     hash_to_video_figures = {}
@@ -111,8 +109,9 @@ def upload_figures_to_dataset(dataset_id, data_to_upload):
                 g.api.video.annotation.append(video_info.id, annotation, g.output_key_id_map)
                 # g.api.annotation.append_labels(video_info.id, labels)
 
-    append_processed_video_figures(figures_ids=[item['figureId'] for item in data_to_upload if item['figureId'] is not None],
-                                   project_id=g.output_project_id)
+    append_processed_video_figures(
+        figures_ids=[item['figureId'] for item in data_to_upload if item['figureId'] is not None],
+        project_id=g.output_project_id)
 
     return hash2annotation
 
@@ -147,30 +146,34 @@ def update_queues_stats(state):
     select_class.update_classes_table()  # @TODO: update table by objects ids
 
 
-@functools.lru_cache(maxsize=32)
-def download_frame_from_video_with_cache(video_id, frame_index) -> pathlib.Path:
-    filename = f'{uuid.uuid4()}_{time.time_ns()}.png'
+# @functools.lru_cache(maxsize=32)
+def download_frame_from_video_with_cache(video_id, frame_index) -> (pathlib.Path, pathlib.Path):
+    filename = f'{video_id}_{frame_index}.png'
 
     file_path = g.temp_frames_dir / filename
-    g.api.video.frame.download_path(
-        video_id=video_id,
-        frame_index=frame_index,
-        path=file_path.as_posix()
-    )
-    return pathlib.Path('./static', 'temp_frames', filename)
+
+    if file_path.exists() is False:
+        g.api.video.frame.download_path(
+            video_id=video_id,
+            frame_index=frame_index,
+            path=file_path.as_posix()
+        )
+    return file_path, pathlib.Path('./static', 'temp_frames', filename)
 
 
-def put_n_frames_to_queue(queue, n=20):
+def put_n_frames_to_queue(queue, n=64):
     for index, item in enumerate(queue.queue):
-        if item['imageUrl'] is None:
-            file_path = download_frame_from_video_with_cache(
+        if item['imageUrl'] is None or os.path.isfile(item['imagePath']) is False:
+            file_path, file_url = download_frame_from_video_with_cache(
                 video_id=item['videoId'],
                 frame_index=item['frameIndex']
             )
 
-            item.update({'imageUrl': file_path.as_posix()})
+            item.update({
+                'imageUrl': file_url.as_posix(),
+                'imagePath': file_path.as_posix()
+            })
             queue.queue[index] = item
 
         if index == n:
             break
-

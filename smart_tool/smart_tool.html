@@ -57,6 +57,7 @@
 
 
 >
+
     <div style="display: flex; align-items: center; justify-content: space-between; position: absolute; width: 100%; z-index: 10001;">
         <el-button
                 type="text"
@@ -103,6 +104,9 @@
             @update:negative-points="widget.negativePoints = $event; widget.lastCall = Math.floor(Date.now());  post('/widgets/smarttool/negative-updated/' + widget.identifier)">
 
     </smarttool-editor>
+    <div style="display: flex; align-items: center; justify-content: flex-end; position: absolute; bottom: 0; width: 100%; z-index: 10001; ">
+        <span style="cursor:default; color: rgba(255, 255, 255, 0.3); font-size: 10px; text-align: right; margin: 2px 3px">OBJECT ID: {{ widget.objectId }}</span>
+    </div>
 </div>
 
 {% endif %}

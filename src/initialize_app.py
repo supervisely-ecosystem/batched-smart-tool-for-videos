@@ -47,12 +47,12 @@ def init_routes():
 def _init_project(state):
     settings_card.select_input_project(identifier=f'{g.input_project_id}', state=state)  # download input project
 
+    state['inputProject']['loading'] = False
+    state['inputProject']['previewUrl'] = g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', '')
+
     settings_card.select_bboxes_order(state=state)
     if settings_card.get_output_project_id() is None:
         settings_card.select_output_project(state=state)
-
-    state['inputProject']['loading'] = False
-    state['inputProject']['previewUrl'] = g.api.project.get_info_by_id(g.input_project_id).reference_image_url
 
     run_sync(state.synchronize_changes())
     run_sync(DataJson().synchronize_changes())

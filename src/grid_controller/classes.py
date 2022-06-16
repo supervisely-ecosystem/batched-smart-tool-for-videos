@@ -1,9 +1,11 @@
 import functools
+import os
 import threading
 
 from supervisely.app.fastapi import run_sync
 from loguru import logger
 
+import src.sly_functions as global_functions
 
 def process_with_lock(func):
     @functools.wraps(func)
@@ -14,7 +16,6 @@ def process_with_lock(func):
         return ret_val
 
     return wrapper
-
 
 
 class GridController:
@@ -62,6 +63,16 @@ class GridController:
         if not images_queue.empty():
             widget.is_active = True
             new_data = images_queue.get()
+
+            if new_data['imageUrl'] is None or os.path.isfile(new_data['imagePath']) is False:
+                file_path, file_url = global_functions.download_frame_from_video_with_cache(
+                    video_id=new_data['videoId'],
+                    frame_index=new_data['frameIndex']
+                )
+
+                new_data['filePath'] = file_path.as_posix()
+                new_data['imageUrl'] = file_url.as_posix()
+
             widget.update_fields_by_data(new_data)
             if not widget.is_empty:
                 widget.add_bbox_padding(padding_coefficient=state['bboxesPadding'])
@@ -77,6 +88,9 @@ class GridController:
 
             if images_queue is not None:
                 images_queue.queue.appendleft(last_object.get_data_to_send())
+            else:
+                if os.path.isfile(last_object.image_path):
+                    os.remove(last_object.image_path)
 
             last_object.remove_remote_fields(state=state, data=data)
 

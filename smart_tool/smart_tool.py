@@ -25,10 +25,11 @@ class SmartTool:
         self.app = app
         self.identifier = self.get_widget_identifier(state, data)
 
-        self._figure_id = None
-        self._object_id = None
+        self.figure_id = None
+        self.object_id = None
 
         self.image_url = None
+        self.image_path = None
 
         self.video_name = None
         self.video_id = None
@@ -192,10 +193,12 @@ class SmartTool:
         self.update_fields_by_data(new_widget_data)
 
     def update_fields_by_data(self, new_widget_data):
-        self._figure_id = new_widget_data.get('figureId')
-        self._object_id = new_widget_data.get('objectId')
+        self.figure_id = new_widget_data.get('figureId')
+        self.object_id = new_widget_data.get('objectId')
 
         self.image_url = new_widget_data.get('imageUrl', '')
+        self.image_path = new_widget_data.get('imagePath', '')
+
         self.video_id = new_widget_data.get('videoId', '')
         self.frame_index = new_widget_data.get('frameIndex', '')
         self.video_hash = new_widget_data.get('videoHash', '')
@@ -220,10 +223,11 @@ class SmartTool:
     def get_data_to_send(self):
         return {
             'identifier': f'{self.identifier}',
-            'figureId': self._figure_id,
-            'objectId': self._object_id,
+            'figureId': self.figure_id,
+            'objectId': self.object_id,
 
             'imageUrl': self.image_url,
+            'imagePath': self.image_path,
 
             'videoHash': self.video_hash,
             'videoId': self.video_id,

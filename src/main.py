@@ -19,6 +19,12 @@ def read_index(request: Request):
                                                            'smart_tool': SmartTool})
 
 
+# @TODO: separating objects by ids
+# @TODO: dislike button
+# @TODO: open in annotator button
+# @TODO: maximum vertical size ?
+
+
 @g.app.on_event("startup")
 async def startup_event():
     initialize_app.init_routes()

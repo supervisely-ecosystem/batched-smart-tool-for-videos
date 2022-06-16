@@ -64,6 +64,7 @@ def get_data_to_render(video_info, bboxes, current_dataset):
             'label': label,
 
             'imageUrl': None,
+            'imagePath': None,
 
             'videoName': f'{video_info.name}',
             'videoId': f'{video_info.id}',
@@ -221,8 +222,6 @@ def select_bboxes_order(state):
             DataJson()['instanceAddress'],
             output_project_id,
             f'{g.api.project.get_info_by_id(g.input_project_id).name}_BST')
-    else:
-        state['dialogWindow']['mode'] = ''
 
 
 def update_output_class(state):
@@ -240,7 +239,6 @@ def update_output_class(state):
 
 def update_selected_queue(state):
     g.selected_queue = g.classes2queues[g.output_class_name]
-
 
 
 def remove_processed_geometries(state):
