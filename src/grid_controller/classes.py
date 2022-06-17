@@ -108,6 +108,7 @@ class GridController:
     @process_with_lock
     def clean_all(self, state, data, images_queue=None):
         identifiers = list(self.widgets.keys())
+        self._current_object_id = None
         while len(identifiers) > 0:
             self._remove(state, data, images_queue)
             identifiers = list(self.widgets.keys())
