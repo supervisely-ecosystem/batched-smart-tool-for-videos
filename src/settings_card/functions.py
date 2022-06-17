@@ -69,7 +69,7 @@ def get_data_to_render(video_info, bboxes, current_dataset):
 
             'videoName': f'{video_info.name}',
             'videoId': f'{video_info.id}',
-            'frameInClickerUrl': f"app/videos/?datasetId={current_dataset.id}&videoFrame={frame_index}&videoId={video_info.id}",
+            'frameInClickerUrl': pathlib.Path(DataJson()["instanceAddress"], f"app/videos/?datasetId={current_dataset.id}&videoFrame={frame_index}&videoId={video_info.id}").as_posix(),
             'videoHash': f'{video_info.hash}',
             'videoSize': tuple([video_info.frame_width, video_info.frame_height]),
 
