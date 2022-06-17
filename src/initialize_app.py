@@ -50,10 +50,11 @@ def _init_project(state):
 
     state['inputProject']['loading'] = False
 
-    sly_url = g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', '').split('/')
-    state['inputProject']['previewUrl'] = pathlib.Path(DataJson()['instanceAddress'], *sly_url).as_posix()
-    print(state['inputProject']['previewUrl'])
-    print(g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', ''))
+    sly_url = g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', '')
+    # state['inputProject']['previewUrl'] = pathlib.Path(DataJson()['instanceAddress'], *sly_url).as_posix()
+    state['inputProject']['previewUrl'] = sly_url
+    # print(state['inputProject']['previewUrl'])
+    # print(g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', ''))
 
     settings_card.select_bboxes_order(state=state)
     if settings_card.get_output_project_id() is None:
