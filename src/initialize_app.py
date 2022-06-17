@@ -1,4 +1,5 @@
 import functools
+import pathlib
 from threading import Thread
 
 from supervisely.app.fastapi import run_sync
@@ -48,8 +49,10 @@ def _init_project(state):
     settings_card.select_input_project(identifier=f'{g.input_project_id}', state=state)  # download input project
 
     state['inputProject']['loading'] = False
-    state['inputProject']['previewUrl'] = g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', '')
 
+    sly_url = g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', '').split('/')
+    state['inputProject']['previewUrl'] = pathlib.Path(DataJson()['instanceAddress'], *sly_url).as_posix()
+    print(state['inputProject']['previewUrl'])
     print(g.api.project.get_info_by_id(g.input_project_id).reference_image_url.replace('%3F', ''))
 
     settings_card.select_bboxes_order(state=state)

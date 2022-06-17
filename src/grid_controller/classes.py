@@ -28,12 +28,11 @@ class GridController:
 
     @process_with_lock
     def change_count(self, actual_count, app, state, data, images_queue):
-        self._current_object_id = None
-
         while actual_count > len(self.widgets) and not images_queue.empty():
             self._add(app, state, data, images_queue)
 
         while actual_count < len(self.widgets):
+            self._current_object_id = None
             self._remove(state, data, images_queue)
 
     # @process_with_lock
@@ -76,7 +75,7 @@ class GridController:
             new_data = images_queue.get()
 
             widget.is_active = True
-            if new_data['imageUrl'] is None or new_data['imagePath'] or os.path.isfile(new_data['imagePath']) is False:
+            if new_data['imageUrl'] is None or new_data['imagePath'] is None or os.path.isfile(new_data['imagePath']) is False:
                 file_path, file_url = global_functions.download_frame_from_video_with_cache(
                     video_id=new_data['videoId'],
                     frame_index=new_data['frameIndex']
