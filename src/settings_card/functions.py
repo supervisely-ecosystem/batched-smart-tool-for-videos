@@ -1,5 +1,6 @@
 import copy
 import functools
+import os.path
 import pathlib
 from queue import Queue
 
@@ -69,7 +70,7 @@ def get_data_to_render(video_info, bboxes, current_dataset):
 
             'videoName': f'{video_info.name}',
             'videoId': f'{video_info.id}',
-            'frameInClickerUrl': str(pathlib.Path(DataJson()["instanceAddress"], f"app/videos/?datasetId={current_dataset.id}&videoFrame={frame_index}&videoId={video_info.id}")),
+            'frameInClickerUrl': os.path.join(DataJson()["instanceAddress"], f"app/videos/?datasetId={current_dataset.id}&videoFrame={frame_index}&videoId={video_info.id}"),
             'videoHash': f'{video_info.hash}',
             'videoSize': tuple([video_info.frame_width, video_info.frame_height]),
 
