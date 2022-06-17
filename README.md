@@ -1,6 +1,6 @@
 <div align="center" markdown>
 
-[//]: # (<img src="https://github.com/supervisely-ecosystem/dev-smart-tool-batched/releases/download/v0.0.1/batch_smart_tool_demo.gif?raw=true" style="width: 100%;"/>)
+<img src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/demo.gif?raw=true" style="width: 100%;"/>
 
 # Batched Smart Tool for Videos 
 
