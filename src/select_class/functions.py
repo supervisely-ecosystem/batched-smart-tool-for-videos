@@ -52,3 +52,35 @@ def update_classes_table():
         row[4] = int(((row[3] - row[2]) / row[3]) * 100)  # percentage
 
     classes_table.rows = actual_rows
+
+
+def shift_queue_by_object_id(selected_queue, direction='next'):
+    def get_all_objects_by_id(obj_id):
+        obj_list = []
+        while not selected_queue.empty():
+            if direction == 'next':
+                if selected_queue.queue[0]['objectId'] == obj_id:
+                    obj_list.append(selected_queue.get())
+                else:
+                    break
+            else:
+                if selected_queue.queue[-1]['objectId'] == obj_id:
+                    obj_list.append(selected_queue.queue.pop())
+                else:
+                    break
+        return obj_list
+
+    if not selected_queue.empty():
+        if direction == 'next':
+            objects_to_shift = get_all_objects_by_id(obj_id=selected_queue.queue[0]['objectId'])
+            selected_queue.queue.extend(objects_to_shift)
+        elif direction == 'prev':
+            objects_to_shift = get_all_objects_by_id(obj_id=selected_queue.queue[-1]['objectId'])
+            selected_queue.queue.extendleft(objects_to_shift)
+
+
+
+
+
+
+

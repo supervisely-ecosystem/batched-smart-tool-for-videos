@@ -20,6 +20,7 @@ def read_index(request: Request):
 
 
 # @TODO: move broken_tag from objects to figures (SDK request)
+# @TODO: object left show
 
 @g.app.on_event("startup")
 async def startup_event():

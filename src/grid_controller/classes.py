@@ -35,6 +35,8 @@ class GridController:
             self._current_object_id = None
             self._remove(state, data, images_queue)
 
+        state['selectedObjectId'] = self._current_object_id
+
     # @process_with_lock
     def change_padding(self, actual_padding):
         for widget in self.widgets.values():
@@ -112,4 +114,6 @@ class GridController:
         while len(identifiers) > 0:
             self._remove(state, data, images_queue)
             identifiers = list(self.widgets.keys())
+
+        state['selectedObjectId'] = self._current_object_id
         run_sync(state.synchronize_changes())

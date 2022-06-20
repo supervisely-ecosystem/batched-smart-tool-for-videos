@@ -22,11 +22,11 @@
 
 # Overview
 
-Application allows you to label objects with **Smart Tool using batch way**.
+Application allows you to label videos with **Smart Tool using batch way**.
 
 Application key points:
 - Multiclass annotation
-- Input data ordering
+- Sorts objects by
 - Saves annotation progress automatically 
 - Apply model to Objects (Rectangles) / whole Images
 - Mark broken Objects / Images

@@ -8,12 +8,12 @@
                     </div>
                     <div class="fflex" style="justify-content: center; flex-direction: column; margin: 0 2px;">
                         <p style="font-size: 12px; color: #5a6772; margin: 1px 0">Smart Tools <b
-                                style="color: #ff6600;">number</b>
+                                style="color: #ff6600;">num</b>
                         </p>
                         <el-input-number size="small" :value="state.windowsCount"
                                          @change="state.windowsCount=$event; post('/windows-count-changed/');"
                                          :min="1" :max="64"
-                                         style="width: 140px; margin: 2px 3px"
+                                         style="width: 110px; margin: 2px 3px"
                         >
 
                         </el-input-number>
@@ -30,7 +30,7 @@
                         <el-input-number size="small" :value="state.toolSize"
                                          @change="state.toolSize=$event;"
                                          :min="1" :max="100"
-                                         style="width: 140px; margin: 2px 3px">
+                                         style="width: 124px; margin: 2px 3px">
 
                         </el-input-number>
 
@@ -46,7 +46,7 @@
                         <el-input-number size="small" :value="state.bboxesPadding"
                                          @change="state.bboxesPadding=$event; post('/bboxes-padding-changed/');"
                                          :min="0" :max="100" :step="1"
-                                         style="width: 140px; margin: 2px 3px"
+                                         style="width: 124px; margin: 2px 3px"
 
                         >
 
@@ -62,7 +62,7 @@
                         <el-input-number size="small" :value="state.masksOpacity"
                                          @change="state.masksOpacity=$event; post('/bboxes-masks-opacity-changed/');"
                                          :min="0" :max="100" :step="1"
-                                         style="width: 140px; margin: 2px 3px"
+                                         style="width: 114px; margin: 2px 3px"
 
                         >
 
@@ -116,7 +116,8 @@
                         <el-tooltip placement="bottom" effect="light" :open-delay="900">
                             <div style="text-align: center" slot="content">
                                 in <b>batched</b> mode model make <b>one prediction</b> from all gave points;<br>
-                                in <b></b>consistent</b> mode model make <b>predictions for each point</b> in points order, each next point contributes less prediction;<br>
+                                in <b></b>consistent</b> mode model make <b>predictions for each point</b> in points
+                                order, each next point contributes less prediction;<br>
                             </div>
                             <div class="fflex"
                                  style="justify-content: center; flex-direction: column; margin: 0 2px;">
@@ -125,7 +126,7 @@
                                            @change="post('/update-locals/')"
                                            :disabled="!state.processingServer.connected"
                                            size="small"
-                                           style="width: 108px"
+                                           style="width: 94px"
                                            :clearable="false"
                                 >
                                     <el-option
@@ -148,28 +149,30 @@
                         border-right: solid black 1px">
                             <sly-icon
                                     v-if="state.queueIsEmpty"
-                                    style="margin-top: 17px; margin-left: 5px"
+                                    style="margin: 17px 0 0 5px"
                                     slot="icon" :options="{ color: '#ffffff', bgColor: '#fe5a1d', rounded: false }">
                                 <i class="zmdi zmdi-crop-din"></i>
                             </sly-icon>
                             <sly-icon
                                     v-else
-                                    style="margin-top: 17px; margin-left: 5px"
+                                    style="margin: 17px 0 0 5px"
                                     slot="icon" :options="{ color: '#ffffff', bgColor: '#32a852', rounded: false }">
                                 <i class="zmdi zmdi-crop-din"></i>
                             </sly-icon>
 
                             <div class="fflex"
                                  style="justify-content: center; flex-direction: column; margin: 0 2px;">
-                                <p style="font-size: 12px; color: #5a6772; margin: 2px 0">Apply To</p>
+
+
+                                <p style="font-size: 12px; color: #5a6772; margin: 2px 0; text-align: center">Apply
+                                    To</p>
                                 <el-button
-                                        accesskey="z"
+
                                         :plain="true"
                                         :disabled="!state.outputClassName"
                                         type="success" class="regular" size="small"
-                                        style="margin: 0 4px; padding: 10px 4px; width: 140px"
-                                        @click="state.selectClassVisible=true"
-                                >
+                                        style="margin: 0 4px; padding: 0 4px; width: 140px; height: 30px"
+                                        @click="state.selectClassVisible=true">
                                     <div style="display: flex; position: relative">
 
                                         <span style="margin-left: 10px;
@@ -192,12 +195,63 @@
 
                                         <div style="position: absolute; right: 3px; ">
 
-                                            <i style="margin: 0 5px; color: #bfcbd9;" class="zmdi zmdi-settings"></i>
+                                            <i style="margin: 0 5px; color: #bfcbd9;"
+                                               class="zmdi zmdi-settings"></i>
                                         </div>
                                     </div>
                                 </el-button>
+
                             </div>
                         </div>
+                    </el-tooltip>
+                    <el-tooltip placement="bottom" effect="light" :open-delay="900">
+                        <div style="text-align: center" slot="content">
+                            change object
+                        </div>
+                        <div style="padding: 0 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+                        border-right: solid black 1px">
+                            <p style="font-size: 12px; color: #5a6772; margin: 2px 0 4px 0; text-align: center">Object ID: <span style="color: #ff6600;">{{ state.selectedObjectId }}</span></p>
+                            <div style="display: flex; flex-direction: row">
+                                <el-button
+
+                                        :plain="true"
+                                        :disabled="!state.outputClassName || state.queueIsEmpty"
+                                        type="success" class="regular" size="small"
+                                        style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
+                                        @click="post('/change-selected-object/prev/')">
+                                    <div style="display: flex; position: relative">
+                                        <span style="margin: 0 5px;
+                                                    display: flex;
+                                                    justify-content: flex-start;">
+                                            <i class="zmdi zmdi-skip-previous" style="margin-right: 3px"></i>
+                                            PREV
+
+                                        </span>
+                                    </div>
+                                </el-button>
+                                <el-button
+
+                                        :plain="true"
+                                        :disabled="!state.outputClassName || state.queueIsEmpty"
+                                        type="success" class="regular" size="small"
+                                        style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
+                                        @click="post('/change-selected-object/next/')">
+                                    <div style="display: flex; position: relative">
+
+                                        <span style="margin: 0 5px;
+                                                    display: flex;
+                                                    justify-content: flex-start;">
+                                            NEXT
+
+                                        <i class="zmdi zmdi-skip-next" style="margin-left: 3px"></i>
+                                        </span>
+                                    </div>
+                                </el-button>
+
+                            </div>
+
+                        </div>
+
                     </el-tooltip>
 
 
@@ -235,7 +289,7 @@
                 style="display: flex; width:100%; flex-direction: row; flex-wrap: wrap; justify-content: center;">
 
             <div v-for="widget in state.widgets.SmartTool" :style="{flex: `0 0 ${state.toolSize}%`}" :disabled="true">
-                {{{smart_tool.to_undefined_html()}}}
+                {{{ smart_tool.to_undefined_html() }}}
             </div>
 
         </div>
@@ -337,8 +391,8 @@
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 15px;">
                     <div>
                         <p style="font-size: 12px; color: #5a6772; margin: 2px 0">BBoxes left: <b
-                                style="color: #ff6600;">{{Object.keys(state.widgets.SmartTool).length +
-                            data.objectsLeftQueue}} </b>
+                                style="color: #ff6600;">{{ Object.keys(state.widgets.SmartTool).length +
+                            data.objectsLeftQueue }} </b>
                         </p>
 
                     </div>
@@ -378,8 +432,8 @@
                     <b>INFO</b>
                 </div>
                 <div slot="description">
-                    There is no more BBoxes with label <b style="text-transform: uppercase;">{{
-                    state.outputClassName }}</b> to annotate
+                    There is no more BBoxes with label <b
+                        style="text-transform: uppercase;">{{ state.outputClassName }}</b> to annotate
                 </div>
             </sly-field>
             <div style="display: flex">
