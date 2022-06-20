@@ -12,6 +12,8 @@ StateJson()['updatingClass'] = False
 
 StateJson()['queueMode'] = 'objects'
 
+StateJson()['anotherObjectLoading'] = False
+
 DataJson()['objectsLeftTotal'] = 0
 DataJson()['objectsLeftQueue'] = 0
 

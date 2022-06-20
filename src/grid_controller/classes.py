@@ -32,7 +32,7 @@ class GridController:
             self._add(app, state, data, images_queue)
 
         while actual_count < len(self.widgets):
-            self._current_object_id = None
+            # self._current_object_id = None
             self._remove(state, data, images_queue)
 
         state['selectedObjectId'] = self._current_object_id

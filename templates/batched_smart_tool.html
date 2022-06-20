@@ -206,11 +206,13 @@
                     </el-tooltip>
                     <el-tooltip placement="bottom" effect="light" :open-delay="900">
                         <div style="text-align: center" slot="content">
-                            change object
+                            select specific object to annotate in selected classname
                         </div>
                         <div style="padding: 0 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-                        border-right: solid black 1px">
-                            <p style="font-size: 12px; color: #5a6772; margin: 2px 0 4px 0; text-align: center">Object ID: <span style="color: #ff6600;">{{ state.selectedObjectId }}</span></p>
+                        border-right: solid black 1px" v-loading="state.anotherObjectLoading">
+                            <p style="font-size: 12px; color: #5a6772; margin: 2px 0 4px 0; text-align: center">Object ID:
+                                <span v-show="state.selectedObjectId" style="color: #ff6600;">{{ state.selectedObjectId }}</span>
+                            </p>
                             <div style="display: flex; flex-direction: row">
                                 <el-button
 
@@ -218,7 +220,7 @@
                                         :disabled="!state.outputClassName || state.queueIsEmpty"
                                         type="success" class="regular" size="small"
                                         style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
-                                        @click="post('/change-selected-object/prev/')">
+                                        @click="state.anotherObjectLoading=true; post('/change-selected-object/prev/')">
                                     <div style="display: flex; position: relative">
                                         <span style="margin: 0 5px;
                                                     display: flex;
@@ -235,7 +237,7 @@
                                         :disabled="!state.outputClassName || state.queueIsEmpty"
                                         type="success" class="regular" size="small"
                                         style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
-                                        @click="post('/change-selected-object/next/')">
+                                        @click="state.anotherObjectLoading=true; post('/change-selected-object/next/')">
                                     <div style="display: flex; position: relative">
 
                                         <span style="margin: 0 5px;
