@@ -20,4 +20,6 @@ classes_table = widgets.RadioTable(
 
 
 selected_class_progress = widgets.SlyTqdm()
+mark_object_as_unlabeled_notification = widgets.NotificationBox(title='Object will be skipped', description='Current object will be marked as unlabeled and will be skipped', box_type='warning')
+
 running_classes_progress = None

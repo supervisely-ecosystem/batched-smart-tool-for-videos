@@ -19,6 +19,10 @@ def read_index(request: Request):
                                                            'smart_tool': SmartTool})
 
 
+@g.app.post("/apply_changes/")
+async def apply_changes(state: StateJson = Depends(StateJson.from_request)):
+    await state.synchronize_changes()
+
 # @TODO: move broken_tag from objects to figures (SDK request)
 # @TODO: object left show
 

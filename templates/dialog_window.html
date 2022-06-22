@@ -99,3 +99,24 @@
         </el-button>
     </div>
 </el-dialog>
+
+<el-dialog title="Mark Object as Unlabeled" :visible.sync="state.dialogWindow.mode === 'markObjectAsUnlabeled'"
+           :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
+
+    {{{ mark_object_as_unlabeled_notification.to_html() }}}
+
+    <div style="width: 100%; display: flex; align-items: center; justify-content: flex-end">
+        <el-button
+                :plain="true"
+                type="primary" class="regular" size="small" style="margin: 0 2px; margin-top: 17px"
+                @click="state.dialogWindow.mode=''; post('/apply_changes/')">
+            cancel
+        </el-button>
+        <el-button
+                type="danger" class="regular" size="small" style="margin: 0 2px; margin-top: 17px"
+                :loading="state.markingObjectLoading"
+                @click="state.markingObjectLoading=true; post('/mark_all_objects_as_unlabeled/')">
+            mark as unlabeled
+        </el-button>
+    </div>
+</el-dialog>

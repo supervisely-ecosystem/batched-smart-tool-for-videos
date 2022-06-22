@@ -21,6 +21,8 @@ def init_routes():
     g.app.add_api_route('/select-output-class/', settings_card.select_output_class, methods=["POST"])
 
     g.app.add_api_route('/change-selected-object/{flag}/', select_class.select_another_object, methods=["POST"])
+    g.app.add_api_route('/show_mark_object_dialog/', select_class.show_mark_object_dialog, methods=["POST"])
+    g.app.add_api_route('/mark_all_objects_as_unlabeled/', select_class.mark_object_as_unlabeled, methods=["POST"])
 
     g.app.add_api_route('/connect-to-model/{identifier}', settings_card.connect_to_model, methods=["POST"])
     g.app.add_api_route('/windows-count-changed/', grid_controller.windows_count_changed, methods=["POST"])

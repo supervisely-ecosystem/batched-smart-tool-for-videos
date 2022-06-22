@@ -46,7 +46,7 @@ def connect_to_model(identifier: str,
 def select_output_project(state: supervisely.app.StateJson = Depends(supervisely.app.StateJson.from_request)):
     g.imagehash2imageinfo_by_datasets = {}  # reset output images cache
     g.grid_controller.clean_all(state=state, data=DataJson(), images_queue=g.selected_queue)
-    print('passed00')
+
     if state['outputProject']['mode'] == 'new':
         local_functions.create_new_project_by_name(state)
         local_functions.copy_meta_from_input_to_output(state['outputProject']['id'])

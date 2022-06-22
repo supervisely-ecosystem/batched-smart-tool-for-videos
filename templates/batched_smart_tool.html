@@ -103,7 +103,7 @@
                                 <p style="font-size: 12px; color: #5a6772; margin: 2px 0">Connect to Model</p>
                                 <sly-select-app-session
                                         :loading="state.processingServer.loading"
-                                        style="width: 128px"
+                                        style="width: 104px"
                                         slot="title"
                                         :group-id="data.teamId"
                                         :app-session-id="state.processingServer.sessionId"
@@ -145,7 +145,7 @@
                         <div style="text-align: center" slot="content">
                             select object name to label
                         </div>
-                        <div style="padding: 0 10px; display: flex; justify-content: center; align-items: center;
+                        <div style="padding: 0 5px; display: flex; justify-content: center; align-items: center;
                         border-right: solid black 1px">
                             <sly-icon
                                     v-if="state.queueIsEmpty"
@@ -164,14 +164,13 @@
                                  style="justify-content: center; flex-direction: column; margin: 0 2px;">
 
 
-                                <p style="font-size: 12px; color: #5a6772; margin: 2px 0; text-align: center">Apply
-                                    To</p>
+                                <p style="font-size: 12px; color: #5a6772; margin: 2px 0; text-align: center">Apply To</p>
                                 <el-button
 
                                         :plain="true"
                                         :disabled="!state.outputClassName"
                                         type="success" class="regular" size="small"
-                                        style="margin: 0 4px; padding: 0 4px; width: 140px; height: 30px"
+                                        style="margin: 0 4px; padding: 0 4px; width: 100px; height: 30px"
                                         @click="state.selectClassVisible=true">
                                     <div style="display: flex; position: relative">
 
@@ -204,24 +203,27 @@
                             </div>
                         </div>
                     </el-tooltip>
-                    <el-tooltip placement="bottom" effect="light" :open-delay="900">
-                        <div style="text-align: center" slot="content">
-                            select specific object to annotate inside selected classname
-                        </div>
-                        <div style="padding: 0 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-                        border-right: solid black 1px" v-loading="state.anotherObjectLoading">
-                            <p style="font-size: 12px; color: #5a6772; margin: 2px 0 4px 0; text-align: center">Object ID:
-                                <span v-show="state.selectedObjectId" style="color: #ff6600;">{{ state.selectedObjectId }}</span>
-                            </p>
-                            <div style="display: flex; flex-direction: row">
-                                <el-button
+                    <div style="display: flex; flex-direction: row; border-right: solid black 1px;">
+                        <el-tooltip placement="bottom" effect="light" :open-delay="900">
+                            <div style="text-align: center" slot="content">
+                                select specific object to annotate inside selected classname
+                            </div>
+                            <div style="margin: 0 5px 0 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;"
+                                 v-loading="state.anotherObjectLoading">
+                                <p style="font-size: 12px; color: #5a6772; margin: 2px 0 4px 0; text-align: center">
+                                    Object ID:
+                                    <span v-show="state.selectedObjectId"
+                                          style="color: #ff6600;">{{ state.selectedObjectId }}</span>
+                                </p>
+                                <div style="display: flex; flex-direction: row">
+                                    <el-button
 
-                                        :plain="true"
-                                        :disabled="!state.outputClassName || state.queueIsEmpty"
-                                        type="success" class="regular" size="small"
-                                        style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
-                                        @click="state.anotherObjectLoading=true; post('/change-selected-object/prev/')">
-                                    <div style="display: flex; position: relative">
+                                            :plain="true"
+                                            :disabled="!state.outputClassName || state.queueIsEmpty"
+                                            type="success" class="regular" size="small"
+                                            style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
+                                            @click="state.anotherObjectLoading=true; post('/change-selected-object/prev/')">
+                                        <div style="display: flex; position: relative">
                                         <span style="margin: 0 5px;
                                                     display: flex;
                                                     justify-content: flex-start;">
@@ -229,16 +231,16 @@
                                             PREV
 
                                         </span>
-                                    </div>
-                                </el-button>
-                                <el-button
+                                        </div>
+                                    </el-button>
+                                    <el-button
 
-                                        :plain="true"
-                                        :disabled="!state.outputClassName || state.queueIsEmpty"
-                                        type="success" class="regular" size="small"
-                                        style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
-                                        @click="state.anotherObjectLoading=true; post('/change-selected-object/next/')">
-                                    <div style="display: flex; position: relative">
+                                            :plain="true"
+                                            :disabled="!state.outputClassName || state.queueIsEmpty"
+                                            type="success" class="regular" size="small"
+                                            style="margin: 0 1px; padding: 0 4px; width: 100%; height: 26px"
+                                            @click="state.anotherObjectLoading=true; post('/change-selected-object/next/')">
+                                        <div style="display: flex; position: relative">
 
                                         <span style="margin: 0 5px;
                                                     display: flex;
@@ -247,14 +249,38 @@
 
                                         <i class="zmdi zmdi-skip-next" style="margin-left: 3px"></i>
                                         </span>
-                                    </div>
-                                </el-button>
+                                        </div>
+                                    </el-button>
+                                </div>
+
 
                             </div>
 
-                        </div>
+                        </el-tooltip>
+                        <el-tooltip placement="bottom" effect="light" :open-delay="900">
+                            <div style="text-align: center" slot="content">
+                                skip <b>object {{ state.selectedObjectId }}</b> and mark it as unlabeled
+                            </div>
+                            <div style="margin: 0 10px 0 0">
+                                <el-button
 
-                    </el-tooltip>
+                                        :plain="true"
+                                        :disabled="!state.outputClassName || state.queueIsEmpty"
+                                        type="warning" class="regular" size="small"
+                                        style="margin: 0 1px; padding: 0 4px; width: 100%; height: 100%"
+                                        @click="post('/show_mark_object_dialog/')">
+                                    <div style="display: flex; position: relative">
+                                        <span style="margin: 0 5px;
+                                                    display: flex;
+                                                    justify-content: flex-start;">
+                                            <i class="zmdi zmdi-thumb-down" style="margin: 0 5px"></i>
+
+                                        </span>
+                                    </div>
+                                </el-button>
+                            </div>
+                        </el-tooltip>
+                    </div>
 
 
                     <div style="padding-left: 12px; padding-right: 4px;">
@@ -392,9 +418,12 @@
 
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 15px;">
                     <div>
-                        <p style="font-size: 12px; color: #5a6772; margin: 2px 0">BBoxes left: <b
-                                style="color: #ff6600;">{{ Object.keys(state.widgets.SmartTool).length +
-                            data.objectsLeftQueue }} </b>
+                        <p style="font-size: 12px; color: #5a6772; margin: 2px 0">objects left: <b
+                                style="color: #ff6600;">{{ data.objectsLeftQueue }} </b>
+                        </p>
+{#                        Object.keys(state.widgets.SmartTool).length +#}
+                        <p style="font-size: 12px; color: #5a6772; margin: 2px 0">figures left: <b
+                                style="color: #ff6600;">{{ data.figuresLeftQueue }} </b>
                         </p>
 
                     </div>

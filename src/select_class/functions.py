@@ -1,6 +1,6 @@
 from supervisely.app import DataJson
-from src.select_class.local_widgets import classes_table, selected_class_progress
-import src.select_class.local_widgets as local_widgets
+from src.select_class.widgets import classes_table, selected_class_progress
+import src.select_class.widgets as local_widgets
 
 import src.sly_globals as g
 
@@ -33,54 +33,76 @@ def get_obj_num_in_queue(queue):
     return len(obj_ids)
 
 
-def update_classes_table():
+def update_classes_table(state):
     actual_rows = classes_table.rows
 
     labels = list(g.classes2queues.keys())
     queues = list(g.classes2queues.values())
 
-    for row in actual_rows:
-        label = row[0]
+    for index, row in enumerate(actual_rows):
+        label, objects_left, figures_left, figures_total, progress_n = row
+        objects_left = get_obj_num_in_queue(queues[labels.index(label)])
+
         if label == g.output_class_name:
-            row[2] = len(queues[labels.index(label)].queue) + len([widget for widget in g.grid_controller.widgets.values() if widget.is_empty is False])  # left
+            figures_left = len(queues[labels.index(label)].queue) + len([widget for widget in g.grid_controller.widgets.values() if widget.is_empty is False])  # left
+            update_classes_progress(label=label, total=figures_total, n=figures_total-figures_left)
 
-            update_classes_progress(label=label, total=row[3], n=row[3]-row[2])
+            if not queues[labels.index(label)].empty() and state['selectedObjectId'] is not None:
+                figures_left_in_queue = len([widget_data for widget_data in queues[labels.index(label)].queue
+                                        if widget_data['objectId'] == state['selectedObjectId']])
+
+                figures_left_on_screen = len([widget for widget in g.grid_controller.widgets.values() if widget.is_empty is False])
+
+                if figures_left_in_queue == 0:
+                    objects_left += 1
+
+                DataJson()['figuresLeftQueue'] = figures_left_in_queue + figures_left_on_screen  # left current object id left
+            else:
+                DataJson()['figuresLeftQueue'] = 0
+
+            DataJson()['objectsLeftTotal'] = figures_total
+            DataJson()['objectsLeftQueue'] = objects_left
+
         else:
-            row[2] = len(queues[labels.index(label)].queue)
+            figures_left = len(queues[labels.index(label)].queue)
 
-        row[1] = get_obj_num_in_queue(queues[labels.index(label)])
-        row[4] = int(((row[3] - row[2]) / row[3]) * 100)  # percentage
+        progress_n = int(((figures_total - figures_left) / figures_total) * 100)  # percentage
+
+        actual_rows[index] = [label, objects_left, figures_left, figures_total, progress_n]
+
+
 
     classes_table.rows = actual_rows
 
 
-def shift_queue_by_object_id(selected_queue, direction='next'):
-    def get_all_objects_by_id(obj_id):
-        obj_list = []
-        while not selected_queue.empty():
-            if direction == 'next':
-                if selected_queue.queue[0]['objectId'] == obj_id:
-                    obj_list.append(selected_queue.get())
-                else:
-                    break
+def get_all_objects_by_id(obj_id, selected_queue, direction='next'):
+    obj_list = []
+    while not selected_queue.empty():
+        if direction == 'next':
+            if selected_queue.queue[0]['objectId'] == obj_id:
+                obj_list.append(selected_queue.get())
             else:
-                if selected_queue.queue[-1]['objectId'] == obj_id:
-                    obj_list.append(selected_queue.queue.pop())
-                else:
-                    break
-        return obj_list
+                break
+        else:
+            if selected_queue.queue[-1]['objectId'] == obj_id:
+                obj_list.append(selected_queue.queue.pop())
+            else:
+                break
+    return obj_list
 
+
+def shift_queue_by_object_id(selected_queue, direction='next'):
     if not selected_queue.empty():
         if direction == 'next':
-            objects_to_shift = get_all_objects_by_id(obj_id=selected_queue.queue[0]['objectId'])
+            objects_to_shift = get_all_objects_by_id(obj_id=selected_queue.queue[0]['objectId'], selected_queue=selected_queue, direction=direction)
             selected_queue.queue.extend(objects_to_shift)
         elif direction == 'prev':
-            objects_to_shift = get_all_objects_by_id(obj_id=selected_queue.queue[-1]['objectId'])
+            objects_to_shift = get_all_objects_by_id(obj_id=selected_queue.queue[-1]['objectId'], selected_queue=selected_queue, direction=direction)
             selected_queue.queue.extendleft(objects_to_shift)
 
 
-
-
-
-
-
+def get_broken_objects_by_obj_id(obj_id, queue):
+    objects_data = get_all_objects_by_id(obj_id, queue)
+    for current_object in objects_data:
+        current_object['isBroken'] = True
+    return objects_data

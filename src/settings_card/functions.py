@@ -255,7 +255,7 @@ def remove_processed_geometries(state):
 
         g.classes2queues[label] = updated_queue
 
-    select_class.update_classes_table()
+    select_class.update_classes_table(state)
 
 
 def get_output_project_id():

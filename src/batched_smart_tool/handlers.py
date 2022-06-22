@@ -218,7 +218,7 @@ def next_batch(state: supervisely.app.StateJson = Depends(supervisely.app.StateJ
     state['batchInUpload'] = False
 
     # 4 - update stats in table
-    sc_functions.update_classes_table()
+    sc_functions.update_classes_table(state)
     global_functions.update_queues_stats(state)
     global_functions.put_n_frames_to_queue(g.selected_queue)
 

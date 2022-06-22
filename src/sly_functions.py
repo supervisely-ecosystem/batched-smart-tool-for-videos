@@ -170,10 +170,7 @@ def update_queues_stats(state):
     state['outputClassName'] = g.output_class_name
     state['updatingClass'] = False
 
-    DataJson()['objectsLeftTotal'] = objects_left_number()
-    DataJson()['objectsLeftQueue'] = len(g.selected_queue.queue)
-
-    select_class.update_classes_table()  # @TODO: update table by objects ids
+    select_class.update_classes_table(state)
 
 
 # @functools.lru_cache(maxsize=32)
