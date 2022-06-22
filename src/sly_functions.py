@@ -22,12 +22,11 @@ from supervisely.app import DataJson
 def get_supervisely_video_figure_by_widget_data(widget_data):
     video_figure: supervisely.VideoFigure = g.video_figure_id_to_video_figure.get(widget_data['figureId'], None)
 
-    if widget_data.get('isBroken', False) is True:
-        geometry = supervisely.Bitmap(
-            np.ones([widget_data['originalBbox'][1][1] - widget_data['originalBbox'][0][1],
-                     widget_data['originalBbox'][1][0] - widget_data['originalBbox'][0][0]]).astype(bool),
-            origin=supervisely.PointLocation(row=widget_data['originalBbox'][0][1],
-                                             col=widget_data['originalBbox'][0][0])
+    if widget_data.get('isBroken', False) and widget_data.get('originalBbox') is not None:
+        original_bbox = widget_data['originalBbox']
+        geometry = supervisely.Rectangle(
+            top=original_bbox[0][1], left=original_bbox[0][0],
+            bottom=original_bbox[1][1], right=original_bbox[1][0]
         )
 
         not_labeled_tag = VideoTag(

@@ -130,7 +130,7 @@ def create_new_object_meta_by_name(output_class_name, geometry_type):
     return supervisely.ProjectMeta(obj_classes=objects, project_type=supervisely.ProjectType.VIDEOS)
 
 
-def get_object_class_by_name(state, output_class_name, geometry_type=supervisely.Bitmap):
+def get_object_class_by_name(state, output_class_name, geometry_type=supervisely.AnyGeometry):
     output_project_meta = supervisely.ProjectMeta.from_json(g.api.project.get_meta(id=state['outputProject']['id']))
     obj_class = output_project_meta.obj_classes.get(output_class_name, None)
 
