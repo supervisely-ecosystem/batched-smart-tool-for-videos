@@ -8,7 +8,7 @@
     "interactive segmentation",
     "inference interfaces"
   ],
-  "description": "batched smart labeling tool for videos",
+  "description": "Batched smart labeling tool for Videos",
   "docker_image": "supervisely/base-py-sdk:6.23.0",
   "entrypoint": "python -m uvicorn src.main:g.app --host 0.0.0.0 --port 8000",
   "port": 8000,

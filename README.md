@@ -11,12 +11,12 @@
 </p>
 
 
-[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/dev-smart-tool-batched)
+[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/batched-smart-tool-for-videos)
 [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/dev-smart-tool-batched)
-[![views](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/dev-smart-tool-batched&counter=views&label=views)](https://supervise.ly)
-[![used by teams](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/dev-smart-tool-batched&counter=downloads&label=used%20by%20teams)](https://supervise.ly)
-[![runs](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/dev-smart-tool-batched&counter=runs&label=runs&123)](https://supervise.ly)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/batched-smart-tool-for-videos)
+[![views](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/batched-smart-tool-for-videos&counter=views&label=views)](https://supervise.ly)
+[![used by teams](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/batched-smart-tool-for-videos&counter=downloads&label=used%20by%20teams)](https://supervise.ly)
+[![runs](https://app.supervise.ly/public/api/v3/ecosystem.counters?repo=supervisely-ecosystem/batched-smart-tool-for-videos&counter=runs&label=runs&123)](https://supervise.ly)
 
 </div>
 
@@ -25,11 +25,10 @@
 Application allows you to label videos with **Smart Tool using batch way**.
 
 Application key points:
-- Multiclass annotation
-- Sorts objects by
-- Saves annotation progress automatically 
-- Apply model to Objects (Rectangles) / whole Images
-- Mark broken Objects / Images
+- Multiclass labeling
+- Sorts objects by Object IDs
+- Saves annotation progress automatically
+- Mark problem Objects with issue tag
 - Linked green / red points between cards
 - Flexible settings
 - Doesn't change the Input Project
@@ -48,16 +47,12 @@ Application key points:
 
 ### Application Startup
 
-1. On startup application will suggest **input data order.**<br> 
-   For comfortable and efficient labeling we recommend to use sorted bboxes order.
 
-<img src="https://imgur.com/IQhS6Bg.png" style="width: 100%;"/>
-
-2. **Application saves annotation progress automatically.**<br>
+**Application saves annotation progress automatically.**<br>
 If you launch application on same project a second time — 
    it will suggest you to continue the labeling process from the paused point.
 
-<img src="https://imgur.com/n1oLkux.png" style="width: 100%;"/>
+<img src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/preloading.png" style="width: 100%;"/>
 
 
 ### Controls with Shortcuts
@@ -89,7 +84,7 @@ If you launch application on same project a second time —
 4. Easily place **green points** to label-interested area and **red points** to label-not-interested area to correct local mistakes.
 <img src="https://imgur.com/1ijrQpC.png" style="width: 100%;"/>
 
-5. When you satisfied with results, click **Next Batch** button to load next images
+5. When you satisfied with results, click **Next Batch** button to load next figures
 <img src="https://imgur.com/HJaNRY3.png" style="width: 100%;"/>
 
 ### Cells Functionality
@@ -116,13 +111,19 @@ Each cell has core functionality:
 **Model Preferences** allows you to connect to served Smart Tool model, and select labeling mode.  
 <img src="https://imgur.com/CSroTT2.png" style="height: 60px;"/>
 
-**Apply model to Preference** allows you to choose input data for labeling.  
-You can select objects (Rectangles) from prepared project or label whole images.  
+**Apply model to Preference** allows you to choose input classname for labeling.  
+Input project must contain Objects with Rectangle shapes to process.
    
 <img src="https://imgur.com/y05aYwo.png" style="height: 60px;"/>  
 
 `ℹ️ Multiclass labeling available`  
-<img src="https://imgur.com/bJKavJA.png" style="width: 60%;"/>
+<img src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/apply_to.png" style="width: 60%;"/>
+
+**Switch between Preview / Next object** allows you to label specific object inside selected ClassName.  
+**Mark whole object with Issue Tag** allows you to mark all remained figures of current object with issue tag.
+
+<img src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/objects_iterator.png" style="height: 60px;"/>  
+
 
 
 ### Control Panel
@@ -149,17 +150,9 @@ You can select objects (Rectangles) from prepared project or label whole images.
 # How to run
 
 
-1. Prepare **Images Project**<br>
-   
-**Option 1:** with roughly assigned **Rectangles** 
+1. Prepare **Videos Project with Rectangle shapes Objects**<br>
 
-<img src="https://github.com/supervisely-ecosystem/dev-smart-tool-batched/releases/download/v0.0.1/prepare-project.gif?raw=true" style="width: 100%;"/>
-
-**Option 2:** with plain images
-<img src="https://imgur.com/qSY467f.png" style="width: 100%;"/>
-
-
-
+<img src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/project_example.gif?raw=true" style="width: 100%;"/>
 
 
 2. Launch [RITM interactive segmentation Smart Tool](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fritm-interactive-segmentation%252Fsupervisely)
@@ -168,14 +161,9 @@ You can select objects (Rectangles) from prepared project or label whole images.
 
 
 
-3. Add [Batched Smart Tool](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/dev-smart-tool-batched) to your Team
+3. Launch [Batched Smart Tool for Videos](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/batched-smart-tool-for-videos)
 
-<img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/dev-smart-tool-batched" src="https://imgur.com/KkM6dO0.png" width="350px">
-
-
-4. Launch from context menu of prepared project
-
-<img src="https://imgur.com/YrAQeRi.png" style="width: 100%;"/>
+<img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/batched-smart-tool-for-videos" src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/ecosystem.png" width="350px">
 
 
 
