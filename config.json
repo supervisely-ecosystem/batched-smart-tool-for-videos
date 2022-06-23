@@ -6,7 +6,8 @@
     "neural network",
     "videos",
     "interactive segmentation",
-    "inference interfaces"
+    "inference interfaces",
+    "labeling"
   ],
   "description": "Batched smart labeling tool for Videos",
   "docker_image": "supervisely/base-py-sdk:6.23.0",
@@ -14,7 +15,7 @@
   "port": 8000,
   "task_location": "workspace_tasks",
   "icon_background": "#FFFFFF",
-  "icon_cover": false,
+  "icon_cover": true,
   "icon": "https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/logo.png",
   "instance_version": "6.4.43",
   "context_menu": {
