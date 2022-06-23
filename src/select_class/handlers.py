@@ -33,7 +33,7 @@ def select_another_object(flag: str,
 
 def show_mark_object_dialog(state: supervisely.app.StateJson = Depends(supervisely.app.StateJson.from_request)):
     local_widgets.mark_object_as_unlabeled_notification.title = f'Object with ID {state["selectedObjectId"]} will be skipped'
-    local_widgets.mark_object_as_unlabeled_notification.description = f'All {DataJson()["figuresLeftQueue"]} figures will be marked as unlabeled'
+    local_widgets.mark_object_as_unlabeled_notification.description = f'Remaining {DataJson()["figuresLeftQueue"]} figures will be marked as unlabeled'
 
     state['dialogWindow']['mode'] = 'markObjectAsUnlabeled'
     run_sync(DataJson().synchronize_changes())
