@@ -10,7 +10,7 @@ def progress_bar_formatter(value):
 
 
 classes_table = widgets.RadioTable(
-    columns=["classname", "objects left", "figures left", "figures total", "progress"],
+    columns=["classname", "objects (left / total)", "figures (left / total)", "progress"],
     rows=[],
     subtitles={},  # {"name": "subname"},
     column_formatters={

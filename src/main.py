@@ -24,7 +24,8 @@ async def apply_changes(state: StateJson = Depends(StateJson.from_request)):
     await state.synchronize_changes()
 
 # @TODO: move broken_tag from objects to figures (SDK request)
-# @TODO: object left show
+# @TODO: figures left / total, objects left / total
+
 
 @g.app.on_event("startup")
 async def startup_event():

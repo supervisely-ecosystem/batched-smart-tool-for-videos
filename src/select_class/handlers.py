@@ -16,7 +16,8 @@ import src.select_class.functions as local_functions
 import src.select_class.widgets as local_widgets
 
 
-def select_another_object(flag: str, state: supervisely.app.StateJson = Depends(supervisely.app.StateJson.from_request)):
+def select_another_object(flag: str,
+                          state: supervisely.app.StateJson = Depends(supervisely.app.StateJson.from_request)):
     g.grid_controller.update_local_fields(state=state, data=DataJson())
     g.grid_controller.clean_all(state=state, data=DataJson(), images_queue=g.selected_queue)
 
@@ -40,9 +41,9 @@ def show_mark_object_dialog(state: supervisely.app.StateJson = Depends(supervise
 
 
 def mark_object_as_unlabeled(state: supervisely.app.StateJson = Depends(supervisely.app.StateJson.from_request)):
+    object_id_to_mark = state['selectedObjectId']
+    figures_left = DataJson()["figuresLeftQueue"]
     try:
-        object_id_to_mark = state['selectedObjectId']
-
         g.grid_controller.update_local_fields(state=state, data=DataJson())
         g.grid_controller.clean_all(state=state, data=DataJson(), images_queue=g.selected_queue)
 
@@ -64,8 +65,13 @@ def mark_object_as_unlabeled(state: supervisely.app.StateJson = Depends(supervis
                                                      'message': f'{ex}'})
 
     finally:
+        # state['slyNotification'] = {  #  @TODO: ask Umar why it doesn't work
+        #     'type': 'success',
+        #     'title': 'Done',
+        #     'message': f'All {figures_left} figures were marked as unlabeled',
+        #     'duration': 2
+        # }
+        state['queueIsEmpty'] = g.selected_queue.empty()
         state['markingObjectLoading'] = False
         state['dialogWindow']['mode'] = ''
         run_sync(state.synchronize_changes())
-
-

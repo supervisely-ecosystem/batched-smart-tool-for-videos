@@ -188,7 +188,7 @@ def download_frame_from_video_with_cache(video_id, frame_index) -> (pathlib.Path
     return file_path, pathlib.Path('./static', 'temp_frames', filename)
 
 
-def put_n_frames_to_queue(queue, n=1):
+def put_n_frames_to_queue(queue, n=64):
     for index, item in enumerate(queue.queue):
         if item['imageUrl'] is None or item['imagePath'] is None or os.path.isfile(item['imagePath']) is False:
             file_path, file_url = download_frame_from_video_with_cache(

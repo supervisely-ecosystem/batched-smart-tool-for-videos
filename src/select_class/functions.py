@@ -19,7 +19,7 @@ def init_table_data():
     rows_to_init = []
     for label, queue in g.classes2queues.items():
         objects_num = get_obj_num_in_queue(queue)
-        rows_to_init.append([label, objects_num, len(queue.queue), len(queue.queue), 0])
+        rows_to_init.append([label, f'{objects_num} / {objects_num}', f'{len(queue.queue)} / {len(queue.queue)}', 0])
 
     classes_table.rows = rows_to_init
 
@@ -40,14 +40,18 @@ def update_classes_table(state):
     queues = list(g.classes2queues.values())
 
     for index, row in enumerate(actual_rows):
-        label, objects_left, figures_left, figures_total, progress_n = row
+        label, objects, figures, progress_n = row
+
+        _, objects_total = map(int, objects.split('/'))
+        figures_left, figures_total = map(int, figures.split('/'))
+
         objects_left = get_obj_num_in_queue(queues[labels.index(label)])
 
         if label == g.output_class_name:
             figures_left = len(queues[labels.index(label)].queue) + len([widget for widget in g.grid_controller.widgets.values() if widget.is_empty is False])  # left
             update_classes_progress(label=label, total=figures_total, n=figures_total-figures_left)
 
-            if not queues[labels.index(label)].empty() and state['selectedObjectId'] is not None:
+            if state['selectedObjectId'] is not None:
                 figures_left_in_queue = len([widget_data for widget_data in queues[labels.index(label)].queue
                                         if widget_data['objectId'] == state['selectedObjectId']])
 
@@ -68,9 +72,7 @@ def update_classes_table(state):
 
         progress_n = int(((figures_total - figures_left) / figures_total) * 100)  # percentage
 
-        actual_rows[index] = [label, objects_left, figures_left, figures_total, progress_n]
-
-
+        actual_rows[index] = [label, f'{objects_left} / {objects_total}', f'{figures_left} / {figures_total}', progress_n]
 
     classes_table.rows = actual_rows
 

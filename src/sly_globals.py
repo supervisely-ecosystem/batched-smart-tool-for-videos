@@ -45,6 +45,7 @@ api = supervisely.Api.from_env()
 
 
 StateJson()['widgets'] = {}
+StateJson()['slyNotification'] = None
 
 
 DataJson()['instanceAddress'] = os.environ['SERVER_ADDRESS']
