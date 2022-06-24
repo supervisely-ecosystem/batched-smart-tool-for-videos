@@ -22,5 +22,6 @@
     "target": [
       "videos_project"
     ]
-  }
+  },
+  "poster": "https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/poster.jpg"
 }
