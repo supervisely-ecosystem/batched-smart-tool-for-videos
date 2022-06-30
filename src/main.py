@@ -5,6 +5,7 @@ from threading import Thread
 import uvicorn  # 🪐 server tools
 from fastapi import Request, Depends
 
+import src.select_class
 import supervisely
 from smart_tool import SmartTool  # 🤖 widgets
 
@@ -14,14 +15,17 @@ from supervisely.app import StateJson, DataJson
 
 from supervisely.app.fastapi import available_after_shutdown
 
+
 @g.app.get("/")
 @available_after_shutdown(app=g.app)
 def read_index(request: Request = None):
     return g.templates_env.TemplateResponse('index.html', {'request': request,
                                                            'smart_tool': SmartTool})
 
+
 @g.app.on_event("shutdown")
 def shutdown():
+    del src.select_class.selected_class_progress
     read_index()  # save last version of static files
 
 
