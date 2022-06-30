@@ -5,7 +5,6 @@ from threading import Thread
 import uvicorn  # 🪐 server tools
 from fastapi import Request, Depends
 
-import src.select_class
 import supervisely
 from smart_tool import SmartTool  # 🤖 widgets
 
@@ -25,7 +24,6 @@ def read_index(request: Request = None):
 
 @g.app.on_event("shutdown")
 def shutdown():
-    del src.select_class.selected_class_progress
     read_index()  # save last version of static files
 
 
