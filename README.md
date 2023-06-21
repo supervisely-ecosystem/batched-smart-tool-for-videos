@@ -72,19 +72,19 @@ If you launch application on same project a second time —
 ### General Usage Scenario
 
 1. **Assign Base (<kbd>Shift</kbd> + <kbd>A</kbd>)** points to all linked cells
-<img src="https://imgur.com/nE0CP4N.png" style="width: 100%;"/>  
+<img src="media/68747470733a2f2f696d6775722e636f6d2f6e45304350344e2e706e67.png" style="width: 100%;"/>  
 
 2. **Update Masks (<kbd>Shift</kbd> + <kbd>D</kbd>)** on all unupdated (orange) cells
-<img src="https://imgur.com/IxcUVm3.png" style="width: 100%;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f49786355566d332e706e67.png" style="width: 100%;"/>
 
 3. **Unlink All (<kbd>Shift</kbd> + <kbd>Q</kbd>)** cells
-<img src="https://imgur.com/5XkMWoI.png" style="width: 100%;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f35586b4d576f492e706e67.png" style="width: 100%;"/>
 
 4. Easily place **green points** to label-interested area and **red points** to label-not-interested area to correct local mistakes.
-<img src="https://imgur.com/1ijrQpC.png" style="width: 100%;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f31696a725170432e706e67.png" style="width: 100%;"/>
 
 5. When you satisfied with results, click **Next Batch** button to load next figures
-<img src="https://imgur.com/HJaNRY3.png" style="width: 100%;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f484a614e5259332e706e67.png" style="width: 100%;"/>
 
 ### Cells Functionality
 
@@ -96,24 +96,24 @@ Each cell has core functionality:
 3. Mark as Labeled — mark object as labeled (optional option).
 4. Show in Input Project — open object in the Classic Labeling Interface.
 
-<img src="https://imgur.com/CfpcuAY.png" style="width: 100%;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f436670637541592e706e67.png" style="width: 100%;"/>
 
 
 ### Preferences Panel
 
 **Preferences Panel** allows you to customize labeling interface for your needs.
-<img src="https://imgur.com/cYXObJB.png" style="width: 100%;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f6359584f624a422e706e67.png" style="width: 100%;"/>
 
 **Grid Cells Preferences** allows you to adjust number, size, padding and masks opacity parameters for each cell in the grid.  
-<img src="https://imgur.com/MrqTMmc.png" style="height: 60px;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f4d7271544d6d632e706e67.png" style="height: 60px;"/>
 
 **Model Preferences** allows you to connect to served Smart Tool model, and select labeling mode.  
-<img src="https://imgur.com/CSroTT2.png" style="height: 60px;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f4353726f5454322e706e67.png" style="height: 60px;"/>
 
 **Apply model to Preference** allows you to choose input classname for labeling.  
 Input project must contain Objects with Rectangle shapes to process.
    
-<img src="https://imgur.com/y05aYwo.png" style="height: 60px;"/>  
+<img src="media/68747470733a2f2f696d6775722e636f6d2f7930356159776f2e706e67.png" style="height: 60px;"/>  
 
 `ℹ️ Multiclass labeling available`  
 <img src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/apply_to.png" style="width: 60%;"/>
@@ -128,22 +128,22 @@ Input project must contain Objects with Rectangle shapes to process.
 ### Control Panel
 
 **Control Panel** allows you control labeling process.
-<img src="https://imgur.com/DDTnoXW.png" style="width: 100%;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f4444546e6f58572e706e67.png" style="width: 100%;"/>
 
 
 **Link all (<kbd>Shift</kbd> + <kbd>E</kbd>)** — links all cells, all points (green / red) on linked cells will synchronise.  
 **Unlink all (<kbd>Shift</kbd> + <kbd>Q</kbd>)** — unlinks all cells.  
-<img src="https://imgur.com/iYBzz7m.png" style="height: 60px;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f6959427a7a376d2e706e67.png" style="height: 60px;"/>
 
 **Assign Base (<kbd>Shift</kbd> + <kbd>A</kbd>)** — assign 8 red points to corners and 1 green point to center of image.    
 **Clean Up (<kbd>Shift</kbd> + <kbd>C</kbd>)** — clean up data from all linked cells.   
-<img src="https://imgur.com/y2SCqOu.png" style="height: 60px;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f79325343714f752e706e67.png" style="height: 60px;"/>
 
 
 
 **Update Masks (<kbd>Shift</kbd> + <kbd>D</kbd>)** — updates masks on all unupdated (orange) cells.  
 **Next Batch** — uploads labeled data from cells to output project and load new data to label.  
-<img src="https://imgur.com/Y9Mfxrc.png" style="height: 60px;"/>
+<img src="media/68747470733a2f2f696d6775722e636f6d2f59394d667872632e706e67.png" style="height: 60px;"/>
 
 
 # How to run
@@ -156,7 +156,7 @@ Input project must contain Objects with Rectangle shapes to process.
 
 2. Launch [RITM interactive segmentation Smart Tool](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fritm-interactive-segmentation%252Fsupervisely)
 
-<img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/ritm-interactive-segmentation/supervisely" src="https://i.imgur.com/eWmFwQ9.png" width="600px" style='padding-bottom: 0'/>  
+<img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/ritm-interactive-segmentation/supervisely" src="media/68747470733a2f2f692e696d6775722e636f6d2f65576d467751392e706e67.png" width="600px" style='padding-bottom: 0'/>  
 
 
 
