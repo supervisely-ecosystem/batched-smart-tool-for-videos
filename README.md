@@ -11,11 +11,11 @@
 </p>
 
 
-[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/batched-smart-tool-for-videos)
-[![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack)
+[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/batched-smart-tool-for-videos)
+[![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervisely.com/slack)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/batched-smart-tool-for-videos)
-[![views](https://app.supervise.ly/img/badges/views/supervisely-ecosystem/batched-smart-tool-for-videos.png)](https://supervise.ly)
-[![runs](https://app.supervise.ly/img/badges/runs/supervisely-ecosystem/batched-smart-tool-for-videos.png)](https://supervise.ly)
+[![views](https://app.supervisely.com/img/badges/views/supervisely-ecosystem/batched-smart-tool-for-videos.png)](https://supervisely.com)
+[![runs](https://app.supervisely.com/img/badges/runs/supervisely-ecosystem/batched-smart-tool-for-videos.png)](https://supervisely.com)
 
 </div>
 
@@ -154,13 +154,13 @@ Input project must contain Objects with Rectangle shapes to process.
 <img src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/project_example.gif?raw=true" style="width: 100%;"/>
 
 
-2. Launch [RITM interactive segmentation Smart Tool](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fritm-interactive-segmentation%252Fsupervisely)
+2. Launch [RITM interactive segmentation Smart Tool](https://ecosystem.supervisely.com/apps/supervisely-ecosystem%252Fritm-interactive-segmentation%252Fsupervisely)
 
 <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/ritm-interactive-segmentation/supervisely" src="https://i.imgur.com/eWmFwQ9.png" width="600px" style='padding-bottom: 0'/>  
 
 
 
-3. Launch [Batched Smart Tool for Videos](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/batched-smart-tool-for-videos)
+3. Launch [Batched Smart Tool for Videos](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/batched-smart-tool-for-videos)
 
 <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/batched-smart-tool-for-videos" src="https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/ecosystem.png" width="350px">
 
