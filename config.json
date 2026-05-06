@@ -10,14 +10,14 @@
     "labeling"
   ],
   "description": "Batched smart labeling tool for Videos",
-  "docker_image": "supervisely/labeling:6.73.45",
+  "docker_image": "supervisely/labeling:6.73.564",
   "entrypoint": "python -m uvicorn src.main:g.app --host 0.0.0.0 --port 8000",
   "port": 8000,
   "task_location": "workspace_tasks",
   "icon_background": "#FFFFFF",
   "icon_cover": false,
   "icon": "https://github.com/supervisely-ecosystem/batched-smart-tool-for-videos/releases/download/v0.0.1/logo.png",
-  "instance_version": "6.8.88",
+  "instance_version": "6.15.60",
   "context_menu": {
     "target": [
       "videos_project"
